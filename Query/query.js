@@ -1,6 +1,6 @@
 const queries = {
   applicantSignUp: `
-   INSERT INTO  academy_user(
+   INSERT INTO academy_user(
     first_name,
     last_name,
     email_address,
@@ -12,10 +12,10 @@ const queries = {
     ) VALUES($1, $2, $3, $4, $5, $6, $7,$8) RETURNING * 
   `,
   applicantLogin: `
-    SELECT * FROM academy_user WHERE email=($1)
+    SELECT * FROM academy_user WHERE email_address=($1)
   `,
   findUserByEmail: `
-    SELECT * FROM academy_user WHERE email=($1)
+    SELECT * FROM academy_user WHERE email_address=($1)
   `,
   applicantForm: `
     INSERT INTO users(

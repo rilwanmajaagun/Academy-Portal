@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require("./database");
-// const authRoute = require("./Routes/authRoute");
+const Route = require("./route");
 
 let app = express();
 let port = process.env.PORT || 5000;
@@ -18,4 +18,6 @@ app.get("/", (req, res) => {
 });
 
 
-// app.use("/api/v1", authRoute);
+app.use("/api/v1", Route);
+
+module.exports = app;
