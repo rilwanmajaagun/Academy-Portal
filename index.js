@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const authRoute = require("./Routes/authRoute");
+// const authRoute = require("./Routes/authRoute");
 
 let app = express();
 let port = process.env.PORT || 5000;
@@ -12,4 +12,4 @@ app.listen(port, () => {
 
 
 
-app.use("/api/v1", authRoute);
+// app.use("/api/v1", authRoute);
