@@ -19,9 +19,10 @@ const schema = {
     user: joi.object({
         email_address: joi.string().email().required(),
         password: joi.string().min(6).required(),
+        password_confrimation: joi.string().required().valid(joi.ref('password')),
         first_name: joi.string().max(100).required(),
         last_name: joi.string().max(100).required(),
-        phone_number: joi.string().max(30).required()
+        phone_number: joi.number().required()
     }),
     login: joi.object({
         email: joi.string().email().required(),
