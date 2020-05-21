@@ -1,30 +1,36 @@
 const queries = {
-    addNewApplicant: `
+  applicantSignUp: `
+   INSERT INTO  academy_user(
+    first_name,
+    last_name,
+    email_address,
+    phone_number,
+    password,
+    created_at,
+    updated_at,
+    is_admin
+    ) VALUES($1, $2, $3, $4, $5, $6, $7,$8) RETURNING * 
+  `,
+  applicantLogin: `
+    SELECT * FROM academy_user WHERE email=($1)
+  `,
+  findUserByEmail: `
+    SELECT * FROM academy_user WHERE email=($1)
+  `,
+  applicantForm: `
     INSERT INTO users(
-      email,
-      password,
+      cv,
       first_name,
       last_name,
-      phone_number,
+      email,
       date_of_birth,
       address,
       uiversity,
       course_of_study,
-      cgpa,
-      status,
-      created_at,
-      modified_at,
-      is_admin
-    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
-    applicantLogin: `
-    SELECT * FROM users WHERE email=($1) AND password = ($2)
+      cgpa
+    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *
   `,
-    applicantSignUp: `
-    SELECT * FROM users WHERE email=($1)
-  `,
-    
-  
-    addAssessment: `
+  addAssessment: `
     INSERT INTO assessment(
       user_id,
       batch_id,
@@ -38,9 +44,8 @@ const queries = {
       no_of_question,
       created_at, 
       modified_at
-    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
-  
-    
-  };
-  
-  module.exports = queries;
+    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *
+  `,
+};
+
+module.exports = queries;
