@@ -18,17 +18,26 @@ const queries = {
     SELECT * FROM academy_user WHERE email_address=($1)
   `,
   applicantForm: `
-    INSERT INTO users(
-      cv,
+    INSERT INTO application_form3(
+      user_id,
+      cv_url,
       first_name,
       last_name,
       email,
       date_of_birth,
       address,
-      uiversity,
+      university,
       course_of_study,
-      cgpa
-    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *
+      cgpa,
+      batch_id,
+      closure_date,
+      score,
+      created_at,
+      application_status
+    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *
+  `,
+  getEmail:`
+  SELECT email_address FROM academy_user WHERE id=($1)
   `,
   addAssessment: `
     INSERT INTO assessment(
