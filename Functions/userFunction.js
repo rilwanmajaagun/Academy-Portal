@@ -6,7 +6,7 @@ const {hashPassword,generateUserToken} = require("../Authorization/validation")
 async function createNewUser(body) {
     const d = new Date();
     const created_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
-    const {first_name,last_name,email_address,phone_number,password,password_confrimation} = body;
+    const {first_name,last_name,email_address,phone_number,password,password_confirmation} = body;
     const is_admin = false;
     const hashedPassword = hashPassword(password);
     const queryObj = {

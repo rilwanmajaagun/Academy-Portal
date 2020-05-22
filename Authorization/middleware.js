@@ -7,7 +7,7 @@ async function signupMiddleWare(req, res, next){
         await schema.user.validateAsync(req.body)
     } catch (error) {
         return res.status(400).json({
-            error: error.details[0].message.replace(/[\"]/gi, "")
+            error: error.details[0].message.replace(/[\]["]/gi, "")
         })
     }
     next();
