@@ -18,7 +18,7 @@ async function createNewUser(body) {
 
         const { rowCount, rows } = await db.query(queryObj);
         const response = rows[0];
-        const tokens = generateUserToken(response.id, response.first_name, response.last_name, response.email_address, response.is_admin);
+        const tokens = generateUserToken(response.id, response.first_name, response.last_name, response.email_address,response.phone_number,response.is_admin);
         const data = {
             token: tokens,
             response
@@ -34,7 +34,8 @@ async function createNewUser(body) {
             return Promise.resolve({
                 message: "User created successfully",
                 first_name: data.response.first_name,
-                last_name: data.response.last_name
+                last_name: data.response.last_name,
+                token : data.token
 
             });
         }
@@ -101,7 +102,7 @@ async function checkEmailAndPasswordMatch(body) {
                 });
             }
   
-            const tokens = generateUserToken(result.id, result.email_address);
+            const tokens = generateUserToken(result.id, result.first_name, result.last_name, result.email_address,result.phone_number,result.is_admin);
             const data = {
                 token: tokens,
                 result
