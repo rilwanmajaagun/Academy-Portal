@@ -47,6 +47,23 @@ const schema = {
     },
     status: joi.object({
         status: joi.string().valid('pending', 'shipped', 'delivered')
+    }),
+    application: joi.object({
+        user_id: joi.number().required(),
+        cv_url: joi.string().required(),
+        first_name: joi.string().required(),
+        last_name: joi.string().required(),
+        date_of_birth: joi.date().required(),
+        address: joi.string().required(),
+        university: joi.string().required(),
+        course_of_study: joi.string().required(),
+        cgpa: joi.number().min(0).max(5).required(),
+        batch_id: joi.number().required(),
+        email: joi.string().email().required(),
+        created_at: joi.date().required(),
+        score: joi.number(),
+        application_status: joi.string().valid('Pending',"Approved").required(),
+        closure_date: joi.date().greater(joi.ref('created_at')),
     })
 
 }

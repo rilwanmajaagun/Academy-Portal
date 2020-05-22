@@ -2,8 +2,13 @@ const express = require("express")
 const {
 checkIfUserDoesNotExistBefore,
 createNewUser,
-checkEmailAndPasswordMatch
+checkEmailAndPasswordMatch,
+createApplication
 } = require("../Functions/userFunction")
+const {
+    getEmails,
+    sendreply
+} = require("../nodeMailer/nodemailer")
 
 async function signup (req, res) {
     const { email_address } = req.body;
@@ -24,7 +29,21 @@ async function loginController (req, res) {
         return res.status(e.code).json(e);
     }
 }
+
+async function applicationController (req,res){
+    const body = "your"
+    const subject = "welcome to academy"
+    try{
+        email = await getEmails(4);
+        await sendreply(email, body, subject);
+        const result = await createApplication(req.body)
+        return res.status(201).json(result)
+    }catch(e){
+        return res.status(e.code).json(e);
+    }
+}
 module.exports = {
 signup,
-loginController
+loginController,
+applicationController
 }
