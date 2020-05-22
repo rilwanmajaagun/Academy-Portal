@@ -40,6 +40,7 @@ async function createNewUser(body) {
             });
         }
     } catch (e) {
+        console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
@@ -126,6 +127,12 @@ async function checkEmailAndPasswordMatch(body) {
     }
 }
 
+async function checkEmailAndPasswordMatch(body) {
+    const {email_address, password} = body;
+    const queryObj = {
+        text: queries.applicantLogin,
+        values: [email_address],
+    };
 
 module.exports= {
     createNewUser,

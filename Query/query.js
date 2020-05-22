@@ -42,10 +42,14 @@ const queries = {
       date_completed,
       time_allocated,
       no_of_question,
+      application_status
       created_at, 
       modified_at
-    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *
+    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *
   `,
+  applcantDashboard: `
+    SELECT * FROM assessment WHERE user_id=($1)
+  `
 };
 
 module.exports = queries;
