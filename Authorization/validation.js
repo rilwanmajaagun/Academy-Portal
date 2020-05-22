@@ -15,6 +15,9 @@ const generateUserToken = (id,first_name,last_name,email_address,phone_number,is
     return token;
 }
 
+const comparePassword = (hashedPassword, password) => {
+    return bcrypt.compareSync(password, hashedPassword);
+}; 
 const schema = {
     user: joi.object({
         email_address: joi.string().email().required(),
@@ -25,7 +28,7 @@ const schema = {
         phone_number: joi.number().required()
     }),
     login: joi.object({
-        email: joi.string().email().required(),
+        email_address: joi.string().email().required(),
         password: joi.string().min(6).required(),
     }),
     parcel: joi.object({
@@ -53,5 +56,6 @@ const schema = {
 module.exports = {
     hashPassword,
     generateUserToken,
+    comparePassword,
     schema
 };
