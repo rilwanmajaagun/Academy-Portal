@@ -47,6 +47,7 @@ async function createNewUser(body) {
             });
         }
     } catch (e) {
+        console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
@@ -199,6 +200,7 @@ async function createApplication (user_id,body){
     }
 }
 
+console.log("hello there")
 
 module.exports = {
     createNewUser,
