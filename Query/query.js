@@ -18,13 +18,14 @@ const queries = {
     SELECT * FROM academy_user WHERE email_address=($1)
   `,
   applicantForm: `
-    INSERT INTO application_form3(
+    INSERT INTO application_form(
       user_id,
       cv_url,
       first_name,
       last_name,
       email,
       date_of_birth,
+      age,
       address,
       university,
       course_of_study,
@@ -34,7 +35,7 @@ const queries = {
       score,
       created_at,
       application_status
-    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *
+    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *
   `,
   getEmail:`
   SELECT email_address FROM academy_user WHERE id=($1)
@@ -58,7 +59,10 @@ const queries = {
   `,
   applcantDashboard: `
     SELECT * FROM assessment WHERE user_id=($1)
-  `
+  `,
+  getBatch: `
+  SELECT * FROM application_form WHERE user_id=($1) AND batch_id=($2)
+  `,
 };
 
 module.exports = queries;
