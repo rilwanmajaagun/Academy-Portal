@@ -10,12 +10,12 @@ const {
     loginMiddleWare,
     applicationMiddleWare
 } = require("./Authorization/middleware")
-
+const {verifyToken} = require("./Authorization/verification")
 
 
 router.post("/signup",signupMiddleWare,signup);
 router.post("/login", loginMiddleWare,loginController)
-router.post("/application", applicationMiddleWare,applicationController)
+router.post("/application",verifyToken,applicationMiddleWare,applicationController)
 
 
 module.exports = router

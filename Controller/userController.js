@@ -7,8 +7,10 @@ createApplication
 } = require("../Functions/userFunction")
 const {
     getEmails,
-    sendreply
+    sendMail
 } = require("../nodeMailer/nodemailer")
+
+
 
 async function signup (req, res) {
     const { email_address } = req.body;
@@ -33,10 +35,11 @@ async function loginController (req, res) {
 async function applicationController (req,res){
     const body = "your"
     const subject = "welcome to academy"
+    const user_id = res.locals.user.id
     try{
-        email = await getEmails(4);
-        await sendreply(email, body, subject);
-        const result = await createApplication(req.body)
+        email = await getEmails(user_id);
+        await sendMail(email, body, subject);
+        const result = await createApplication(user_id,req.body)
         return res.status(201).json(result)
     }catch(e){
         return res.status(e.code).json(e);

@@ -49,7 +49,6 @@ const schema = {
         status: joi.string().valid('pending', 'shipped', 'delivered')
     }),
     application: joi.object({
-        user_id: joi.number().required(),
         cv_url: joi.string().required(),
         first_name: joi.string().required(),
         last_name: joi.string().required(),

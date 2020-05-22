@@ -18,7 +18,14 @@ async function createNewUser(body) {
 
         const { rowCount, rows } = await db.query(queryObj);
         const response = rows[0];
-        const tokens = generateUserToken(response.id, response.first_name, response.last_name, response.email_address, response.phone_number, response.is_admin);
+        const tokens = generateUserToken(
+            response.id, 
+            response.first_name, 
+            response.last_name, 
+            response.email_address, 
+            response.phone_number, 
+            response.is_admin
+        );
         const data = {
             token: tokens,
             response
@@ -101,8 +108,13 @@ async function checkEmailAndPasswordMatch(body) {
                     message: "Password is incorrect",
                 });
             }
-
-            const tokens = generateUserToken(result.id, result.first_name, result.last_name, result.email_address, result.phone_number, result.is_admin);
+            const tokens = generateUserToken(result.id, 
+                result.first_name, 
+                result.last_name, 
+                result.email_address, 
+                result.phone_number, 
+                result.is_admin
+            );
             const data = {
                 token: tokens,
                 result
@@ -126,16 +138,41 @@ async function checkEmailAndPasswordMatch(body) {
     }
 }
 
-async function createApplication (body){
-    // const d = new Date();
-    // const created_at = moment(d).format("YYYY-MM-DD");
-    const { user_id, cv_url, first_name, last_name, email, date_of_birth, address, university, course_of_study, cgpa, batch_id, closure_date, score, created_at, application_status} = body;
+async function createApplication (user_id,body){
+    const {
+        cv_url, 
+        first_name, 
+        last_name, 
+        email, 
+        date_of_birth,
+        address, university, 
+        course_of_study, 
+        cgpa, batch_id, 
+        closure_date, score, 
+        created_at, 
+        application_status
+    } = body;
     const queryObj = {
         text: queries.applicantForm,
-        values: [user_id, cv_url, first_name, last_name, email, date_of_birth, address, university, course_of_study, cgpa, batch_id, closure_date, score, created_at, application_status]
+        values: [
+            user_id, 
+            cv_url, 
+            first_name, 
+            last_name, 
+            email, 
+            date_of_birth, 
+            address, 
+            university, 
+            course_of_study, 
+            cgpa, 
+            batch_id, 
+            closure_date, 
+            score, created_at,
+            application_status
+        ]
     }
     try{
-        const { rowCount, rows} = await db.query(queryObj);
+        const { rowCount} = await db.query(queryObj);
         if ( rowCount == 0 ){
             return Promise.reject({
                 status: "error",
@@ -147,8 +184,7 @@ async function createApplication (body){
             return Promise.resolve({
                 status: "success",
                 code: 201,
-                message: "Application sent",
-                rows: rows[0].created_at
+                message: "Application sent"
             })
         };
     }catch(e)

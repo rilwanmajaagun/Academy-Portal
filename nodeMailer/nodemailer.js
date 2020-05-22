@@ -32,7 +32,7 @@ async function getEmails(id) {
     }
 }
 
-async function  sendreply (email, body, subject){
+async function  sendMail (email, body, subject){
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -56,35 +56,8 @@ async function  sendreply (email, body, subject){
         }
       });
       
-}
-
-// async function  locationMail (email, body){
-//     var transporter = nodemailer.createTransport({
-//         service: 'gmail',
-//         auth: {
-//           user:  process.env.NODE_MAILER_EMAIL,
-//           pass:  process.env.NODE_MAILER_PASSWORD
-
-//         }
-//       });
-      
-//       var mailOptions = {
-//         from:  process.env.NODE_MAILER_EMAIL,
-//         to: email,
-//         subject: 'Parcel Location',
-//         text: `Parcel current location is ${body}`
-//       };
-      
-//       transporter.sendMail(mailOptions, function(error, info){
-//         if (error) {
-//           console.log(error);
-//         } else {
-//           console.log('Email sent: ' + info.response);
-//         }
-//       });
-      
-// }
+} 
 module.exports = {
-    sendreply,
+    sendMail,
     getEmails
 }
