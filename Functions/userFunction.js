@@ -9,10 +9,9 @@ async function createNewUser(body) {
     const {first_name,last_name,email_address,phone_number,password,password_confrimation} = body;
     const is_admin = false;
     const hashedPassword = hashPassword(password);
-    const hashedPassword_confrimation = hashPassword(password_confrimation)
     const queryObj = {
         text: queries.applicantSignUp,
-        values: [first_name, last_name, email_address, phone_number, hashedPassword, hashedPassword_confrimation, created_at, created_at,is_admin]
+        values: [first_name, last_name, email_address, phone_number, hashedPassword, created_at, created_at,is_admin]
     } 
   
     try {
