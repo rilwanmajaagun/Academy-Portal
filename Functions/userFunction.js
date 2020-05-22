@@ -1,7 +1,7 @@
 const moment = require("moment");
 const queries = require("../Query/query");
 const db = require("../database");
-const {hashPassword,generateUserToken} = require("../Authorization/validation")
+const {hashPassword, comparePassword, generateUserToken} = require("../Authorization/validation")
 
 async function createNewUser(body) {
     const d = new Date();
@@ -74,8 +74,60 @@ async function checkIfUserDoesNotExistBefore(email_address) {
     }
 }
 
+async function checkEmailAndPasswordMatch(body) {
+    const {email_address, password} = body;
+    const queryObj = {
+        text: queries.applicantLogin,
+        values: [email_address],
+    };
+
+    try {
+        const { rows, rowCount } = await db.query(queryObj);
+        if (rowCount == 0) {
+            return Promise.reject({
+                status: "error",
+                code: 404,
+                message: "Email not found",
+            });
+        }
+        
+        if (rowCount > 0) {
+            const result = rows[0];
+            if (!comparePassword(result.password, password)) {
+                return Promise.reject({
+                    status: "error",
+                    code: 400,
+                    message: "Password is incorrect",
+                });
+            }
+  
+            const tokens = generateUserToken(result.id, result.email_address);
+            const data = {
+                token: tokens,
+                result
+            }
+            return Promise.resolve({
+                message: "Log in successful. Welcome!",
+                first_name: data.result.first_name,
+                last_name: data.result.last_name,
+                token: data.token
+                
+               
+            })
+        }
+
+    } catch (e) {
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error finding user",
+        });
+    }
+}
+
 
 module.exports= {
     createNewUser,
-    checkIfUserDoesNotExistBefore
+    checkIfUserDoesNotExistBefore, 
+    checkEmailAndPasswordMatch
 }

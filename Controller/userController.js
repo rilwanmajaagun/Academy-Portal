@@ -1,7 +1,8 @@
 const express = require("express")
 const {
 checkIfUserDoesNotExistBefore,
-createNewUser
+createNewUser,
+checkEmailAndPasswordMatch
 } = require("../Functions/userFunction")
 
 async function signup (req, res) {
@@ -15,6 +16,15 @@ async function signup (req, res) {
     }
 }
 
+async function loginController (req, res) {
+    try {
+        const result = await checkEmailAndPasswordMatch(req.body);
+        return res.status(202).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
 module.exports = {
-signup
+signup,
+loginController
 }
