@@ -200,7 +200,7 @@ async function createApplication (user_id,body){
     }
 }
 
-console.log("hello there")
+
 
 module.exports = {
     createNewUser,

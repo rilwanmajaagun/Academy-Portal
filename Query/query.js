@@ -18,7 +18,7 @@ const queries = {
     SELECT * FROM academy_user WHERE email_address=($1)
   `,
   applicantForm: `
-    INSERT INTO application_form3(
+    INSERT INTO application_form(
       user_id,
       cv_url,
       first_name,
@@ -39,6 +39,12 @@ const queries = {
   getEmail:`
   SELECT email_address FROM academy_user WHERE id=($1)
   `,
+  applicantDashboard: `
+    SELECT * FROM application_form WHERE id=($1)
+  `,
+  getAllapplicantResult: `
+  SELECT * FROM application_form
+  `,
   addAssessment: `
     INSERT INTO assessment(
       user_id,
@@ -56,9 +62,7 @@ const queries = {
       modified_at
     ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *
   `,
-  applcantDashboard: `
-    SELECT * FROM assessment WHERE user_id=($1)
-  `
+  
 };
 
 module.exports = queries;

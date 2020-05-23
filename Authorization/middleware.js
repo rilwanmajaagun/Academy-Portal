@@ -33,9 +33,18 @@ async function applicationMiddleWare(req, res, next){
     }
     next();
 }
-
+const getUserApplicationMiddleware = (req, res, next) => {
+    const { id } = req.params;
+    if (!parseInt(id)) {
+        return res.status(400).json({
+            message: "Id must be an integer",
+        });
+    }
+    next();
+}
 module.exports ={
     signupMiddleWare,
     loginMiddleWare,
-    applicationMiddleWare
+    applicationMiddleWare,
+    getUserApplicationMiddleware
 }
