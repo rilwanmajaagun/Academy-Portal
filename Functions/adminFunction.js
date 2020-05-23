@@ -55,6 +55,28 @@ async function createApplication (body){
     }
 }
 
+async function getAllApplicantsResult() {
+    const queryObj = {
+        text: queries.getAllapplicantResult,
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+            status: "success",
+            code: 200,
+            message: "Successfully fetched all results",
+           rows  
+        });
+    } catch (e) {
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error fetching all results",
+        });
+    }
+}
+
 module.exports = {
-    createApplication
+    createApplication,
+    getAllApplicantsResult
 }

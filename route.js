@@ -5,14 +5,15 @@ const {
     loginController,
     applicationController,
     getUserApplicationController,
-    getAllApplicantsResultController
 } = require("./Controller/userController");
-const {adminCreateApplication} = require("./Controller/adminController")
+const {
+    adminCreateApplication,
+    getAllApplicantsResultController
+} = require("./Controller/adminController")
 const {
     signupMiddleWare, 
     loginMiddleWare,
     applicationMiddleWare,
-    getUserApplicationMiddleware,
     createapplicationMiddleWare
 } = require("./Authorization/middleware")
 const {
@@ -25,7 +26,7 @@ router.post("/signup",signupMiddleWare,signup);
 router.post("/login", loginMiddleWare,loginController)
 router.post("/application",verifyToken,applicationMiddleWare,applicationController)
 router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,adminCreateApplication)
-router.get("/application/:id", verifyToken, getUserApplicationMiddleware, getUserApplicationController)
-router.get("/applicants/all", verifyToken, getAllApplicantsResultController)
+router.get("/application", verifyToken, getUserApplicationController)
+router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultController)
 
 module.exports = router

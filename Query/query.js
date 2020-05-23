@@ -41,7 +41,7 @@ const queries = {
   SELECT email_address FROM academy_user WHERE id=($1)
   `,
   applicantDashboard: `
-    SELECT * FROM application_form WHERE id=($1)
+    SELECT * FROM application_form WHERE user_id=($1)
   `,
   getAllapplicantResult: `
   SELECT * FROM application_form

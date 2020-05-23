@@ -1,6 +1,7 @@
 const express = require("express")
 const {
-createApplication
+createApplication,
+getAllApplicantsResult
 } = require("../Functions/adminFunction")
 
 
@@ -13,8 +14,18 @@ async function adminCreateApplication (req, res) {
     }
 }
 
+async function getAllApplicantsResultController (req, res) {
+    try {
+        const result = await getAllApplicantsResult();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
 
 
 module.exports = {
-    adminCreateApplication
+    adminCreateApplication,
+    getAllApplicantsResultController
 }
