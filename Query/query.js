@@ -11,9 +11,6 @@ const queries = {
     is_admin
     ) VALUES($1, $2, $3, $4, $5, $6, $7,$8) RETURNING * 
   `,
-  applicantLogin: `
-    SELECT * FROM academy_user WHERE email_address=($1)
-  `,
   findUserByEmail: `
     SELECT * FROM academy_user WHERE email_address=($1)
   `,
@@ -41,7 +38,7 @@ const queries = {
   SELECT email_address FROM academy_user WHERE id=($1)
   `,
   applicantDashboard: `
-    SELECT * FROM application_form WHERE user_id=($1)
+    SELECT * FROM application_form WHERE user_id=($1) ORDER BY "batch_id" DESC
   `,
   getAllapplicantResult: `
   SELECT * FROM application_form
@@ -79,7 +76,8 @@ const queries = {
     created_at,
     updated_at
     ) VALUES($1, $2, $3,$4, $5, $6, $7) RETURNING *
-  `
+  `,
 };
+
 
 module.exports = queries;

@@ -8,7 +8,8 @@ const {
 } = require("./Controller/userController");
 const {
     adminCreateApplication,
-    getAllApplicantsResultController
+    getAllApplicantsResultController,
+    adminLogin
 } = require("./Controller/adminController")
 const {
     signupMiddleWare, 
@@ -21,7 +22,7 @@ const {
     verifyAdminToken
 } = require("./Authorization/verification")
 
-
+router.post("/admin/login",loginMiddleWare,adminLogin)
 router.post("/signup",signupMiddleWare,signup);
 router.post("/login", loginMiddleWare,loginController)
 router.post("/application",verifyToken,applicationMiddleWare,applicationController)

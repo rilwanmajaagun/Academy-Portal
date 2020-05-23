@@ -86,7 +86,7 @@ async function checkIfUserDoesNotExistBefore(email_address) {
 async function checkEmailAndPasswordMatch(body) {
     const { email_address, password } = body;
     const queryObj = {
-        text: queries.applicantLogin,
+        text: queries.findUserByEmail,
         values: [email_address],
     };
 
