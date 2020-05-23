@@ -48,6 +48,7 @@ async function applicationController (req,res){
         return res.status(e.code).json(e);
     }
 }
+
 async function getUserApplicationController (req, res) {
     const user_id = res.locals.user.id
         try {

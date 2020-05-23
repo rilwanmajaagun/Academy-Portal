@@ -9,13 +9,18 @@ const {
 const {
     adminCreateApplication,
     getAllApplicantsResultController,
-    adminLogin
+    adminLogin,
+    getTotal,
+    createAcademy,
+    getAllAcademyRecords,
+    getAcademyNumbers
 } = require("./Controller/adminController")
 const {
     signupMiddleWare, 
     loginMiddleWare,
     applicationMiddleWare,
-    createapplicationMiddleWare
+    createapplicationMiddleWare,
+    createAcademyMiddleWare
 } = require("./Authorization/middleware")
 const {
     verifyToken,
@@ -27,7 +32,12 @@ router.post("/signup",signupMiddleWare,signup);
 router.post("/login", loginMiddleWare,loginController)
 router.post("/application",verifyToken,applicationMiddleWare,applicationController)
 router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,adminCreateApplication)
+router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
 router.get("/application", verifyToken, getUserApplicationController)
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultController)
+router.get("/getTotal/:batch_id", getTotal)
+router.get("/academy", verifyAdminToken,getAllAcademyRecords)
+router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
+
 
 module.exports = router

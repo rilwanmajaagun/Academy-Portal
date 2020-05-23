@@ -275,5 +275,5 @@ module.exports = {
     checkEmailAndPasswordMatch,
     applicationForm,
     checkBatch,
-    getUserApplication
+    getUserApplication,
 }
