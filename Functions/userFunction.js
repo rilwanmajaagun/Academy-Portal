@@ -139,7 +139,9 @@ async function checkEmailAndPasswordMatch(body) {
     }
 }
 
-async function createApplication (user_id,body){
+async function applicationForm (user_id,body){
+    const d = new Date();
+    const currentYear = moment(d).format("YYYY");
     const {
         cv_url, 
         first_name, 
@@ -153,6 +155,8 @@ async function createApplication (user_id,body){
         created_at, 
         application_status
     } = body;
+    const birthYear = date_of_birth.slice(0,4)
+    const age = currentYear-birthYear
     const queryObj = {
         text: queries.applicantForm,
         values: [
@@ -162,6 +166,7 @@ async function createApplication (user_id,body){
             last_name, 
             email, 
             date_of_birth, 
+            age,
             address, 
             university, 
             course_of_study, 
@@ -173,7 +178,7 @@ async function createApplication (user_id,body){
         ]
     }
     try{
-        const { rowCount} = await db.query(queryObj);
+        const { rowCount,rows} = await db.query(queryObj);
         if ( rowCount == 0 ){
             return Promise.reject({
                 status: "error",
@@ -190,7 +195,6 @@ async function createApplication (user_id,body){
         };
     }catch(e)
         { 
-            console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
@@ -200,11 +204,39 @@ async function createApplication (user_id,body){
     }
 }
 
+async function checkBatch(user_id,body) {
+    const { batch_id } = body
+    const queryObj = {
+        text: queries.getBatch,
+        values: [user_id,batch_id],
+    };
+    try {
+        const { rowCount} = await db.query(queryObj);
+        if (rowCount == 0) {
+            return Promise.resolve();
+        }
+        if (rowCount > 0) {
+            return Promise.reject({
+                status: "error",
+                code: 409,
+                message: "Application As been submitted",
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error finding Batch_id",
+        });
+    }
+}
 
 
 module.exports = {
     createNewUser,
     checkIfUserDoesNotExistBefore,
     checkEmailAndPasswordMatch,
-    createApplication
+    applicationForm,
+    checkBatch
 }

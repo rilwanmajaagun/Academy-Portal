@@ -3,7 +3,8 @@ const {
 checkIfUserDoesNotExistBefore,
 createNewUser,
 checkEmailAndPasswordMatch,
-createApplication
+applicationForm,
+checkBatch
 } = require("../Functions/userFunction")
 const {
     getEmails,
@@ -37,9 +38,10 @@ async function applicationController (req,res){
     const subject = "welcome to academy"
     const user_id = res.locals.user.id
     try{
+        await checkBatch(user_id,req.body)
         email = await getEmails(user_id);
         await sendMail(email, body, subject);
-        const result = await createApplication(user_id,req.body)
+        const result = await applicationForm(user_id,req.body)
         return res.status(201).json(result)
     }catch(e){
         return res.status(e.code).json(e);
