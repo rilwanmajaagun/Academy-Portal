@@ -40,6 +40,12 @@ const queries = {
   getEmail:`
   SELECT email_address FROM academy_user WHERE id=($1)
   `,
+  applicantDashboard: `
+    SELECT * FROM application_form WHERE id=($1)
+  `,
+  getAllapplicantResult: `
+  SELECT * FROM application_form
+  `,
   addAssessment: `
     INSERT INTO assessment(
       user_id,

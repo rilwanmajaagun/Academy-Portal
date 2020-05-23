@@ -232,6 +232,7 @@ async function checkBatch(user_id,body) {
     }
 }
 
+
 module.exports = {
     createNewUser,
     checkIfUserDoesNotExistBefore,

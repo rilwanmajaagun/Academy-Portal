@@ -10,7 +10,7 @@ const {
     getEmails,
     sendMail
 } = require("../nodeMailer/nodemailer")
-
+const {getUserApplication, getAllApplicantsResult} = require("../Functions/userApplication");
 
 
 async function signup (req, res) {
@@ -47,8 +47,27 @@ async function applicationController (req,res){
         return res.status(e.code).json(e);
     }
 }
+async function getUserApplicationController (req, res) {
+    const { id } = req.params;
+        try {
+            const result = await getUserApplication(id);
+            return res.status(200).json(result);
+        } catch (e) {
+            return res.status(e.code).json(e);
+        }
+}
+async function getAllApplicantsResultController (req, res) {
+    try {
+        const result = await getAllApplicantsResult();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
 module.exports = {
 signup,
 loginController,
-applicationController
+applicationController,
+getUserApplicationController,
+getAllApplicantsResultController
 }

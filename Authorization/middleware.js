@@ -33,6 +33,17 @@ async function applicationMiddleWare(req, res, next){
     }
     next();
 }
+
+const getUserApplicationMiddleware = (req, res, next) => {
+    const { id } = req.params;
+    if (!parseInt(id)) {
+        return res.status(400).json({
+            message: "Id must be an integer",
+        });
+    }
+    next();
+}
+
 async function createapplicationMiddleWare(req, res, next){
     try {
         await schema.createApplication.validateAsync(req.body)
@@ -48,5 +59,6 @@ module.exports ={
     signupMiddleWare,
     loginMiddleWare,
     applicationMiddleWare,
+    getUserApplicationMiddleware,
     createapplicationMiddleWare
 }
