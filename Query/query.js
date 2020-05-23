@@ -63,6 +63,17 @@ const queries = {
   getBatch: `
   SELECT * FROM application_form WHERE user_id=($1) AND batch_id=($2)
   `,
+  createApplication: `
+  INSERT INTO application_table(
+    file_url,
+    link,
+    closure_date,
+    batch_id,
+    instruction,
+    created_at,
+    updated_at
+    ) VALUES($1, $2, $3,$4, $5, $6, $7) RETURNING *
+  `
 };
 
 module.exports = queries;

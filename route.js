@@ -5,17 +5,23 @@ const {
     loginController,
     applicationController
 } = require("./Controller/userController");
+const {adminCreateApplication} = require("./Controller/adminController")
 const {
     signupMiddleWare, 
     loginMiddleWare,
-    applicationMiddleWare
+    applicationMiddleWare,
+    createapplicationMiddleWare
 } = require("./Authorization/middleware")
-const {verifyToken} = require("./Authorization/verification")
+const {
+    verifyToken,
+    verifyAdminToken
+} = require("./Authorization/verification")
 
 
 router.post("/signup",signupMiddleWare,signup);
 router.post("/login", loginMiddleWare,loginController)
 router.post("/application",verifyToken,applicationMiddleWare,applicationController)
+router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,adminCreateApplication)
 
 
 module.exports = router

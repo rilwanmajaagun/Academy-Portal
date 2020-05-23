@@ -63,6 +63,14 @@ const schema = {
         score: joi.number(),
         application_status: joi.string().valid('Pending',"Approved").required(),
         closure_date: joi.date().greater(joi.ref('created_at')),
+    }),
+    createApplication: joi.object({
+        file_url: joi.string(),
+        link_url: joi.string(),
+        closure_date: joi.date().required(),
+        instruction: joi.string(),
+        batch_id: joi.number()
+
     })
 
 }

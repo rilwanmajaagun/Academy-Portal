@@ -139,7 +139,7 @@ async function checkEmailAndPasswordMatch(body) {
     }
 }
 
-async function createApplication (user_id,body){
+async function applicationForm (user_id,body){
     const d = new Date();
     const currentYear = moment(d).format("YYYY");
     const {
@@ -236,6 +236,6 @@ module.exports = {
     createNewUser,
     checkIfUserDoesNotExistBefore,
     checkEmailAndPasswordMatch,
-    createApplication,
+    applicationForm,
     checkBatch
 }
