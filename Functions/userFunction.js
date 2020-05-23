@@ -15,6 +15,7 @@ async function createNewUser(body) {
     }
 
     try {
+
         const { rowCount, rows } = await db.query(queryObj);
         const response = rows[0];
         const tokens = generateUserToken(
@@ -267,7 +268,6 @@ async function getUserApplication(user_id) {
         });
     }
 }
-
 
 module.exports = {
     createNewUser,
