@@ -276,5 +276,4 @@ module.exports = {
     applicationForm,
     checkBatch,
     getUserApplication,
-    
 }

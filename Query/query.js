@@ -80,6 +80,33 @@ const queries = {
     updated_at
     ) VALUES($1, $2, $3,$4, $5, $6, $7) RETURNING *
   `,
+  getTotalApplication:`
+  SELECT COUNT(*) 
+  FROM application_form
+  WHERE batch_id=($1)
+  UNION
+  SELECT COUNT(*) 
+  FROM application_form
+  `,
+  academyHistory:`
+  INSERT INTO academy(
+    batch_id,
+    students,
+    started,
+    created_at,
+    updated_at
+  ) VALUES ($1, $2, $3, $4, $5)
+  `,
+  getAllAcademyRecord:`
+    SELECT * FROM academy ORDER BY "batch_id" ASC
+  `,
+  getAcademyTotal:`
+  SELECT COUNT(*) 
+  FROM academy
+  `,
+  checkAcademyBatch:`
+  SELECT * FROM academy WHERE batch_id = ($1)
+  `,
 };
 
 

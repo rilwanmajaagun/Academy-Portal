@@ -92,7 +92,7 @@ async function checkIfUserIsAdmin(body) {
             return Promise.reject({
                 status: "error",
                 code: 409,
-                message: "User Not Allowed",
+                message: "User Must be an Admin ",
             });
         }
     } catch (e) {
@@ -161,6 +161,7 @@ async function checkEmailAndPasswordMatch(body) {
         });
     }
 }
+
 async function getSpecificBatch(user_id,body) {
     const {batch_id} = body
     const queryObj = {
@@ -190,18 +191,159 @@ async function getSpecificBatch(user_id,body) {
             });
         }
     } catch (e) {
+       console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+               message: "Error finding batch result",
+        });
+    }
+}
+
+async function getTotalApplication(batch_id) {
+    const queryObj = {
+        text: queries.getTotalApplication,
+        values:[batch_id]
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+            status: "success",
+            code: 200,
+            message: "get total Application",
+           currentApplication: rows[0].count,
+           totalApplication :  rows[1].count,
+        });
+    } catch (e) {
         console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
-            message: "Error finding batch result",
+            message: "Error fetching all results",
         });
     }
 }
+
+async function createAcademyRecord (body){
+    const d = new Date();
+    const created_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
+    const {
+        batch_id,
+        students,
+        started
+    } = body;
+    const queryObj = {
+        text: queries.academyHistory,
+        values: [
+            batch_id,
+            students,
+            started,
+            created_at,
+            created_at
+        ]
+    }
+    try{
+        const { rowCount} = await db.query(queryObj);
+        if ( rowCount == 0 ){
+            return Promise.reject({
+                status: "error",
+                code: 500,
+                message: "colud not create Academy record"
+            });
+        }
+        if ( rowCount > 0 ){
+            return Promise.resolve({
+                status: "success",
+                code: 201,
+                message: "Academy record created successfully"
+            })
+        };
+    }catch(e)
+        { 
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error creating Academy record"
+        })
+
+    }
+}
+
+async function getAllAcademyRecord() {
+    const queryObj = {
+        text: queries.getAllAcademyRecord,
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+            status: "success",
+            code: 200,
+            message: "Successfully fetched all Academy record",
+           rows  
+        });
+    } catch (e) {
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error fetching all results",
+        });
+    }
+}
+
+async function getAcademySofar() {
+    const queryObj = {
+        text: queries.getAcademyTotal,
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+            status: "success",
+            code: 200,
+            message: "Successfully fetched all Academy Numbers",
+           rows  
+        });
+    } catch (e) {
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error fetching all Academy Numbers",
+        });
+    }
+}
+
+async function checkAcademyBatch(body){
+    const { batch_id } = body
+    const queryObj = {
+        text: queries.checkAcademyBatch,
+        values: [batch_id]
+    };
+    try{
+        const { rowCount } = await db.query(queryObj)
+        if( rowCount == 0){
+            return Promise.resolve()
+        }
+        if(rowCount > 0){
+            return Promise.reject({
+                status: "error",
+                code: 400,
+                message: "Batch Record Already Exist"
+            })
+        }
+    }catch(e){
+
+    }
+}
+
 module.exports = {
     createApplication,
     getAllApplicantsResult,
     checkIfUserIsAdmin,
     checkEmailAndPasswordMatch,
-    getSpecificBatch
+    getSpecificBatch,
+    getTotalApplication,
+    createAcademyRecord,
+    getAllAcademyRecord,
+    getAcademySofar,
+    checkAcademyBatch
 }
