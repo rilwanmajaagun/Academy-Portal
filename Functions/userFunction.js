@@ -139,7 +139,7 @@ async function checkEmailAndPasswordMatch(body) {
     }
 }
 
-async function createApplication (user_id,body){
+async function applicationForm (user_id,body){
     const d = new Date();
     const currentYear = moment(d).format("YYYY");
     const {
@@ -232,10 +232,48 @@ async function checkBatch(user_id,body) {
     }
 }
 
+async function getUserApplication(user_id) {
+    const queryObj = {
+        text: queries.applicantDashboard,
+        values: [user_id],
+    };
+    try {
+        const { rows, rowCount } = await db.query(queryObj);
+        const result = rows[0];
+        const data = {
+            result 
+        }
+        if (rowCount == 0) {
+            return Promise.reject({
+                status: "erorr",
+                code: 400,
+                message: "User Application Not found. Please check back",
+            });
+        }
+        if (rowCount > 0) {
+            return Promise.resolve({
+              status: "success",
+              message: "User Application Found",
+            //   data: rows
+            Application_date: data.result.created_at,
+            Application_status: data.result.application_status
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error finding application",
+        });
+    }
+}
+
 module.exports = {
     createNewUser,
     checkIfUserDoesNotExistBefore,
     checkEmailAndPasswordMatch,
-    createApplication,
-    checkBatch
+    applicationForm,
+    checkBatch,
+    getUserApplication
 }

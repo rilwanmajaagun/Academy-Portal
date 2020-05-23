@@ -40,6 +40,12 @@ const queries = {
   getEmail:`
   SELECT email_address FROM academy_user WHERE id=($1)
   `,
+  applicantDashboard: `
+    SELECT * FROM application_form WHERE user_id=($1)
+  `,
+  getAllapplicantResult: `
+  SELECT * FROM application_form
+  `,
   addAssessment: `
     INSERT INTO assessment(
       user_id,
@@ -63,6 +69,17 @@ const queries = {
   getBatch: `
   SELECT * FROM application_form WHERE user_id=($1) AND batch_id=($2)
   `,
+  createApplication: `
+  INSERT INTO application_table(
+    file_url,
+    link,
+    closure_date,
+    batch_id,
+    instruction,
+    created_at,
+    updated_at
+    ) VALUES($1, $2, $3,$4, $5, $6, $7) RETURNING *
+  `
 };
 
 module.exports = queries;
