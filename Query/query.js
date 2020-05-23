@@ -40,6 +40,9 @@ const queries = {
   applicantDashboard: `
     SELECT * FROM application_form WHERE user_id=($1) ORDER BY "batch_id" DESC
   `,
+  getSpecificBatch: `
+    SELECT * FROM application_form WHERE user_id=($1) and batch_id=($2)
+  `,
   getAllapplicantResult: `
   SELECT * FROM application_form
   `,

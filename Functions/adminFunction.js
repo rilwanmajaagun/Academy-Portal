@@ -161,9 +161,47 @@ async function checkEmailAndPasswordMatch(body) {
         });
     }
 }
+async function getSpecificBatch(user_id,body) {
+    const {batch_id} = body
+    const queryObj = {
+        text: queries.getSpecificBatch,
+        values: [user_id, batch_id],
+    };
+    try {
+        const { rows, rowCount } = await db.query(queryObj);
+        const result = rows[0];
+        const data = {
+            result 
+        }
+        if (rowCount == 0) {
+           
+            return Promise.reject({
+                status: "erorr",
+                code: 400,
+                message: "Batch results Not found. Please check back",
+            });
+        }
+        if (rowCount > 0) {
+            return Promise.resolve({
+              status: "success",
+              message: " Batch results Found",
+              data: rows
+            
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error finding batch result",
+        });
+    }
+}
 module.exports = {
     createApplication,
     getAllApplicantsResult,
     checkIfUserIsAdmin,
-    checkEmailAndPasswordMatch
+    checkEmailAndPasswordMatch,
+    getSpecificBatch
 }

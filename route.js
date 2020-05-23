@@ -9,7 +9,9 @@ const {
 const {
     adminCreateApplication,
     getAllApplicantsResultController,
-    adminLogin
+    adminLogin,
+    getSpecificBatchController
+
 } = require("./Controller/adminController")
 const {
     signupMiddleWare, 
@@ -29,5 +31,5 @@ router.post("/application",verifyToken,applicationMiddleWare,applicationControll
 router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,adminCreateApplication)
 router.get("/application", verifyToken, getUserApplicationController)
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultController)
-
+router.get("/specific_batch", verifyAdminToken, getSpecificBatchController)
 module.exports = router
