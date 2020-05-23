@@ -10,6 +10,7 @@ const {
     adminCreateApplication,
     getAllApplicantsResultController,
     adminLogin,
+    getSpecificBatchController,
     getTotal,
     createAcademy,
     getAllAcademyRecords,
@@ -35,9 +36,11 @@ router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,ad
 router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
 router.get("/application", verifyToken, getUserApplicationController)
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultController)
+router.get("/specific_batch", verifyAdminToken, getSpecificBatchController)
 router.get("/getTotal/:batch_id", getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
-
-
+  
+  
+  
 module.exports = router

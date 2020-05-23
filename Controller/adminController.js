@@ -4,6 +4,7 @@ createApplication,
 getAllApplicantsResult,
 checkIfUserIsAdmin,
 checkEmailAndPasswordMatch,
+getSpecificBatch,
 getTotalApplication,
 createAcademyRecord,
 getAllAcademyRecord,
@@ -39,6 +40,13 @@ async function adminLogin (req, res) {
         return res.status(e.code).json(e);
     }
 }
+
+async function getSpecificBatchController (req, res) {
+    const user_id = res.locals.user_id;
+    // const {batch_id} = req.body
+    try {
+        const result = await getSpecificBatch(user_id, req.body);
+        return res.status(202).json(result);
 
 async function getTotal (req, res) {
     const { batch_id } = req.params;
@@ -82,6 +90,7 @@ module.exports = {
     adminCreateApplication,
     getAllApplicantsResultController,
     adminLogin,
+    getSpecificBatchController,
     getTotal,
     createAcademy,
     getAllAcademyRecords,
