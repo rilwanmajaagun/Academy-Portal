@@ -1,7 +1,9 @@
 const express = require("express")
 const {
 createApplication,
-getAllApplicantsResult
+getAllApplicantsResult,
+checkIfUserIsAdmin,
+checkEmailAndPasswordMatch
 } = require("../Functions/adminFunction")
 
 
@@ -23,9 +25,19 @@ async function getAllApplicantsResultController (req, res) {
     }
 }
 
+async function adminLogin (req, res) {
+    try {
+        await checkIfUserIsAdmin(req.body)
+        const result = await checkEmailAndPasswordMatch(req.body);
+        return res.status(202).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
 
 
 module.exports = {
     adminCreateApplication,
-    getAllApplicantsResultController
+    getAllApplicantsResultController,
+    adminLogin
 }
