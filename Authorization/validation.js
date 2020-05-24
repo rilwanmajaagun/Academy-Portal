@@ -34,14 +34,6 @@ const schema = {
         email_address: joi.string().email().required(),
         password: joi.string().min(6).required(),
     }),
-    parcel: joi.object({
-        price: joi.number(),
-        weight: joi.string().required(),
-        location: joi.string().required(),
-        destination: joi.string().required(),
-        sender_name: joi.string().required(),
-        sender_note: joi.string()
-    }),
     idparam: {
         id: joi.number().required()
     },
@@ -63,8 +55,7 @@ const schema = {
         batch_id: joi.number().required(),
         email: joi.string().email().required(),
         created_at: joi.date().required(),
-        score: joi.number(),
-        application_status: joi.string().valid('Pending',"Approved").required(),
+        // application_status: joi.string().valid('Pending',"Approved").required(),
         closure_date: joi.date().greater(joi.ref('created_at')),
     }),
     createApplication: joi.object({
@@ -74,6 +65,11 @@ const schema = {
         instruction: joi.string(),
         batch_id: joi.number()
 
+    }),
+    academy: joi.object({
+        batch_id: joi.number().required(),
+        students: joi.number().required(),
+        started: joi.date().required()
     })
 
 }

@@ -5,7 +5,12 @@ getAllApplicantsResultDESC,
 getAllApplicantsResultASC,
 checkIfUserIsAdmin,
 checkEmailAndPasswordMatch,
-getSpecificBatch
+getTotalApplication,
+createAcademyRecord,
+getAllAcademyRecord,
+getAcademySofar,
+checkAcademyBatch,
+getCurrentBatch
 } = require("../Functions/adminFunction")
 
 
@@ -37,13 +42,14 @@ async function getAllApplicantsResultASCController (req, res) {
 
 async function adminLogin (req, res) {
     try {
-        await checkIfUserIsAdmin(req.body)
-        const result = await checkEmailAndPasswordMatch(req.body);
+         const result = await checkEmailAndPasswordMatch(req.body);
+         await checkIfUserIsAdmin(req.body)
         return res.status(202).json(result);
     } catch (e) {
         return res.status(e.code).json(e);
     }
 }
+
 async function getSpecificBatchController (req, res) {
     const {batch_id} = req.body
     try {
@@ -54,10 +60,51 @@ async function getSpecificBatchController (req, res) {
     }
 }
 
+async function getTotal (req, res) {
+        try {
+            const currentBatch = await getCurrentBatch()
+            const result = await getTotalApplication(currentBatch.current);
+            return res.status(200).json(result);
+        } catch (e) {
+            return res.status(e.code).json(e);
+        }
+}
+
+async function createAcademy (req, res) {
+    try {
+        await checkAcademyBatch(req.body)
+        const result = await createAcademyRecord(req.body)
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function getAllAcademyRecords (req, res) {
+    try {
+        const result = await getAllAcademyRecord();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function getAcademyNumbers (req, res) {
+    try {
+        const result = await getAcademySofar();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
 module.exports = {
     adminCreateApplication,
     getAllApplicantsResultDESCController,
     getAllApplicantsResultASCController,
     adminLogin,
-    getSpecificBatchController
+    getTotal,
+    createAcademy,
+    getAllAcademyRecords,
+    getAcademyNumbers
 }

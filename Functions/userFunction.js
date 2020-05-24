@@ -15,6 +15,7 @@ async function createNewUser(body) {
     }
 
     try {
+
         const { rowCount, rows } = await db.query(queryObj);
         const response = rows[0];
         const tokens = generateUserToken(
@@ -141,6 +142,8 @@ async function checkEmailAndPasswordMatch(body) {
 async function applicationForm (user_id,body){
     const d = new Date();
     const currentYear = moment(d).format("YYYY");
+    const application_status = "pending";
+    const score = 0;
     const {
         cv_url, 
         first_name, 
@@ -150,9 +153,8 @@ async function applicationForm (user_id,body){
         address, university, 
         course_of_study, 
         cgpa, batch_id, 
-        closure_date, score, 
+        closure_date,
         created_at, 
-        application_status
     } = body;
     const birthYear = date_of_birth.slice(0,4)
     const age = currentYear-birthYear
@@ -172,7 +174,8 @@ async function applicationForm (user_id,body){
             cgpa, 
             batch_id, 
             closure_date, 
-            score, created_at,
+            score, 
+            created_at,
             application_status
         ]
     }
@@ -268,7 +271,6 @@ async function getUserApplication(user_id) {
     }
 }
 
-
 module.exports = {
     createNewUser,
     checkIfUserDoesNotExistBefore,
@@ -276,5 +278,4 @@ module.exports = {
     applicationForm,
     checkBatch,
     getUserApplication,
-    
 }
