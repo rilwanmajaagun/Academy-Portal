@@ -54,10 +54,10 @@ async function createApplication (body){
 
     }
 }
-
-async function getAllApplicantsResult() {
+// this is in descending order
+async function getAllApplicantsResultDESC() {
     const queryObj = {
-        text: queries.getAllapplicantResult,
+        text: queries.getAllapplicantResultDESC
     };
     try {
         const { rows } = await db.query(queryObj);
@@ -75,7 +75,27 @@ async function getAllApplicantsResult() {
         });
     }
 }
-
+// this is in ascending order
+async function getAllApplicantsResultASC() {
+    const queryObj = {
+        text: queries.getAllapplicantResultASC,
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+            status: "success",
+            code: 200,
+            message: "Successfully fetched all results",
+           rows  
+        });
+    } catch (e) {
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error fetching all results",
+        });
+    }
+}
 async function checkIfUserIsAdmin(body) {
     const { email_address } = body;
     const queryObj = {
@@ -161,11 +181,10 @@ async function checkEmailAndPasswordMatch(body) {
         });
     }
 }
-async function getSpecificBatch(user_id,body) {
-    const {batch_id} = body
+async function getSpecificBatch(batch_id) {
     const queryObj = {
         text: queries.getSpecificBatch,
-        values: [user_id, batch_id],
+        values: [batch_id]
     };
     try {
         const { rows, rowCount } = await db.query(queryObj);
@@ -200,7 +219,8 @@ async function getSpecificBatch(user_id,body) {
 }
 module.exports = {
     createApplication,
-    getAllApplicantsResult,
+    getAllApplicantsResultDESC,
+    getAllApplicantsResultASC,
     checkIfUserIsAdmin,
     checkEmailAndPasswordMatch,
     getSpecificBatch

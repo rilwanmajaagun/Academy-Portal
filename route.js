@@ -8,7 +8,8 @@ const {
 } = require("./Controller/userController");
 const {
     adminCreateApplication,
-    getAllApplicantsResultController,
+    getAllApplicantsResultDESCController,
+    getAllApplicantsResultASCController,
     adminLogin,
     getSpecificBatchController
 
@@ -30,6 +31,7 @@ router.post("/login", loginMiddleWare,loginController)
 router.post("/application",verifyToken,applicationMiddleWare,applicationController)
 router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,adminCreateApplication)
 router.get("/application", verifyToken, getUserApplicationController)
-router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultController)
+router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultDESCController)
+router.get("/applicants_asc/all", verifyAdminToken, getAllApplicantsResultASCController)
 router.get("/specific_batch", verifyAdminToken, getSpecificBatchController)
 module.exports = router

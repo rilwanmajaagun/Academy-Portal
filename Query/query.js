@@ -41,10 +41,13 @@ const queries = {
     SELECT * FROM application_form WHERE user_id=($1) ORDER BY "batch_id" DESC
   `,
   getSpecificBatch: `
-    SELECT * FROM application_form WHERE user_id=($1) and batch_id=($2)
+    SELECT * FROM application_form WHERE batch_id=($1)
   `,
-  getAllapplicantResult: `
-  SELECT * FROM application_form
+  getAllapplicantResultDESC: `
+  SELECT * FROM application_form ORDER BY "age" DESC, "cgpa" DESC
+  `,
+  getAllapplicantResultASC: `
+  SELECT * FROM application_form ORDER BY "age" ASC, "cgpa" ASC
   `,
   addAssessment: `
     INSERT INTO assessment(
