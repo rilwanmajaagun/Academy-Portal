@@ -10,7 +10,8 @@ createAcademyRecord,
 getAllAcademyRecord,
 getAcademySofar,
 checkAcademyBatch,
-getCurrentBatch
+getCurrentBatch,
+getSpecificBatch
 } = require("../Functions/adminFunction")
 
 
@@ -106,5 +107,6 @@ module.exports = {
     getTotal,
     createAcademy,
     getAllAcademyRecords,
-    getAcademyNumbers
+    getAcademyNumbers,
+    getSpecificBatchController
 }

@@ -377,6 +377,7 @@ async function getCurrentBatch() {
 
 module.exports = {
     createApplication,
+    getSpecificBatch,
     getAllApplicantsResultDESC,
     getAllApplicantsResultASC,
     checkIfUserIsAdmin,
