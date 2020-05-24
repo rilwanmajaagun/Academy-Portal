@@ -55,8 +55,7 @@ const schema = {
         batch_id: joi.number().required(),
         email: joi.string().email().required(),
         created_at: joi.date().required(),
-        score: joi.number(),
-        application_status: joi.string().valid('Pending',"Approved").required(),
+        // application_status: joi.string().valid('Pending',"Approved").required(),
         closure_date: joi.date().greater(joi.ref('created_at')),
     }),
     createApplication: joi.object({
