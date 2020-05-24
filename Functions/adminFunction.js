@@ -54,10 +54,31 @@ async function createApplication (body){
 
     }
 }
-
-async function getAllApplicantsResult() {
+// this is in descending order
+async function getAllApplicantsResultDESC() {
     const queryObj = {
-        text: queries.getAllapplicantResult,
+        text: queries.getAllapplicantResultDESC
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+            status: "success",
+            code: 200,
+            message: "Successfully fetched all results",
+           rows  
+        });
+    } catch (e) {
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error fetching all results",
+        });
+    }
+}
+// this is in ascending order
+async function getAllApplicantsResultASC() {
+    const queryObj = {
+        text: queries.getAllapplicantResultASC,
     };
     try {
         const { rows } = await db.query(queryObj);
@@ -158,6 +179,43 @@ async function checkEmailAndPasswordMatch(body) {
             status: "error",
             code: 500,
             message: "Error finding user",
+        });
+    }
+}
+
+async function getSpecificBatch(batch_id) {
+    const queryObj = {
+        text: queries.getSpecificBatch,
+        values: [batch_id]
+      };
+    try {
+        const { rows, rowCount } = await db.query(queryObj);
+        const result = rows[0];
+        const data = {
+            result 
+        }
+        if (rowCount == 0) {
+           
+            return Promise.reject({
+                status: "erorr",
+                code: 400,
+                message: "Batch results Not found. Please check back",
+            });
+        }
+        if (rowCount > 0) {
+            return Promise.resolve({
+              status: "success",
+              message: " Batch results Found",
+              data: rows
+            
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error finding batch result",
         });
     }
 }
@@ -319,7 +377,8 @@ async function getCurrentBatch() {
 
 module.exports = {
     createApplication,
-    getAllApplicantsResult,
+    getAllApplicantsResultDESC,
+    getAllApplicantsResultASC,
     checkIfUserIsAdmin,
     checkEmailAndPasswordMatch,
     getTotalApplication,
