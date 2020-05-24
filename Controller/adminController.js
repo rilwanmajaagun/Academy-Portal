@@ -8,7 +8,8 @@ getTotalApplication,
 createAcademyRecord,
 getAllAcademyRecord,
 getAcademySofar,
-checkAcademyBatch
+checkAcademyBatch,
+getCurrentBatch
 } = require("../Functions/adminFunction")
 
 
@@ -41,9 +42,9 @@ async function adminLogin (req, res) {
 }
 
 async function getTotal (req, res) {
-    const { batch_id } = req.params;
         try {
-            const result = await getTotalApplication(batch_id);
+            const currentBatch = await getCurrentBatch()
+            const result = await getTotalApplication(currentBatch.current);
             return res.status(200).json(result);
         } catch (e) {
             return res.status(e.code).json(e);

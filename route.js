@@ -35,7 +35,7 @@ router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,ad
 router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
 router.get("/application", verifyToken, getUserApplicationController)
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultController)
-router.get("/getTotal/:batch_id", getTotal)
+router.get("/getTotal", getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
 

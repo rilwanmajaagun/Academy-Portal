@@ -297,6 +297,26 @@ async function checkAcademyBatch(body){
     }
 }
 
+async function getCurrentBatch() {
+    const queryObj = {
+        text: queries.currentBatch,
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+           current:rows[0].batch_id
+        });
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting Cuurent Batch",
+        });
+    }
+}
+
+
 module.exports = {
     createApplication,
     getAllApplicantsResult,
@@ -306,5 +326,6 @@ module.exports = {
     createAcademyRecord,
     getAllAcademyRecord,
     getAcademySofar,
-    checkAcademyBatch
+    checkAcademyBatch,
+    getCurrentBatch
 }

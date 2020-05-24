@@ -104,6 +104,9 @@ const queries = {
   checkAcademyBatch:`
   SELECT * FROM academy WHERE batch_id = ($1)
   `,
+  currentBatch:`
+  SELECT batch_id FROM application_form ORDER BY batch_id DESC
+  `,
 };
 
 
