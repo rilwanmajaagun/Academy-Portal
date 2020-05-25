@@ -5,6 +5,7 @@ const {
     loginController,
     applicationController,
     getUserApplicationController,
+    logoutController
 } = require("./Controller/userController");
 const {
     adminCreateApplication,
@@ -39,10 +40,10 @@ router.get("/application", verifyToken, getUserApplicationController)
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultDESCController)
 router.get("/applicants_asc/all", verifyAdminToken, getAllApplicantsResultASCController)
 router.get("/specific_batch", verifyAdminToken, getSpecificBatchController)
-// router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultController)
 router.get("/getTotal", getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
+router.post("/logout",verifyToken,logoutController)
 
 
 
