@@ -118,6 +118,14 @@ const queries = {
   currentBatch:`
   SELECT batch_id FROM application_form ORDER BY batch_id DESC
   `,
+  blackList:`
+  INSERT INTO blacklist(
+    token 
+  )VALUES ($1)
+  `,
+  getToken:`
+  SELECT * FROM blacklist WHERE token = ($1)
+  `,
 };
 
 
