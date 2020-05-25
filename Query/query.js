@@ -49,8 +49,9 @@ const queries = {
   getAllapplicantResultASC: `
   SELECT * FROM application_form ORDER BY "age" ASC, "cgpa" ASC
 `,
-  getAllapplicantResult: `
-  SELECT * FROM application_form
+  updateStatus:
+  `
+  UPDATE application_form SET application_status=($1) WHERE id=($2) RETURNING *
   `,
   addAssessment: `
     INSERT INTO assessment(
@@ -75,6 +76,7 @@ const queries = {
   getBatch: `
   SELECT * FROM application_form WHERE user_id=($1) AND batch_id=($2)
   `,
+  
   createApplication: `
   INSERT INTO application_table(
     file_url,

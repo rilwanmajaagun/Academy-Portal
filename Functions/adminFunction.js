@@ -373,7 +373,44 @@ async function getCurrentBatch() {
         });
     }
 }
-
+async function changeApplicationStatus( body) {
+    const d = new Date();
+    // const modified_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
+    const { application_status, id } = body
+    const queryObj = {
+        text: queries.updateStatus,
+        values: [application_status, id]
+    }
+    try {
+        const { rows, rowCount } = await db.query(queryObj);
+        const result = rows[0];
+        const data = {
+            result
+        } 
+        if (rowCount === 0) {
+            return Promise.reject({
+                status: "Error",
+                code: 404,
+                message: "Cannot find applicant Id."
+            });
+        }
+        if (rowCount > 0) {
+            return Promise.resolve({
+                status: "success",
+                code: 200,
+                message: "Applicant status updated successfully",
+                user_id: data.result.user_id
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error updating applicant status"
+        })
+    }
+}
 
 module.exports = {
     createApplication,
@@ -387,5 +424,6 @@ module.exports = {
     getAllAcademyRecord,
     getAcademySofar,
     checkAcademyBatch,
-    getCurrentBatch
+    getCurrentBatch,
+    changeApplicationStatus
 }

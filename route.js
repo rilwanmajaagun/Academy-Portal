@@ -16,14 +16,16 @@ const {
     createAcademy,
     getAllAcademyRecords,
     getAcademyNumbers,
-    getSpecificBatchController
+    getSpecificBatchController,
+    changeApplicationController
 } = require("./Controller/adminController")
 const {
     signupMiddleWare, 
     loginMiddleWare,
     applicationMiddleWare,
     createapplicationMiddleWare,
-    createAcademyMiddleWare
+    createAcademyMiddleWare,
+    statusChangeMiddleWare
 } = require("./Authorization/middleware")
 const {
     verifyToken,
@@ -43,7 +45,9 @@ router.get("/specific_batch", verifyAdminToken, getSpecificBatchController)
 router.get("/getTotal", getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
+router.put("/status_change", verifyAdminToken, statusChangeMiddleWare, changeApplicationController)
 router.post("/logout",verifyToken,logoutController)
+
 
 
 
