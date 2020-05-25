@@ -41,7 +41,8 @@ const schema = {
         user_id: joi.number().required()
     },
     status: joi.object({
-        status: joi.string().valid('pending', 'shipped', 'delivered')
+        id:joi.number().required(),
+        application_status: joi.string().valid('Pending',"Approved").required()
     }),
     application: joi.object({
         cv_url: joi.string().required(),
@@ -55,7 +56,7 @@ const schema = {
         batch_id: joi.number().required(),
         email: joi.string().email().required(),
         created_at: joi.date().required(),
-        // application_status: joi.string().valid('Pending',"Approved").required(),
+        application_status: joi.string().valid('Pending',"Approved").required(),
         closure_date: joi.date().greater(joi.ref('created_at')),
     }),
     createApplication: joi.object({

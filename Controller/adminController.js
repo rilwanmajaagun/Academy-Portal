@@ -11,9 +11,13 @@ getAllAcademyRecord,
 getAcademySofar,
 checkAcademyBatch,
 getCurrentBatch,
-getSpecificBatch
+getSpecificBatch,
+changeApplicationStatus
 } = require("../Functions/adminFunction")
-
+const {
+    getEmails,
+    sendMail
+} = require("../nodeMailer/nodemailer")
 
 async function adminCreateApplication (req, res) {
     try {
@@ -98,6 +102,18 @@ async function getAcademyNumbers (req, res) {
         return res.status(e.code).json(e);
     }
 }
+async function changeApplicationController (req, res)  {
+    const body = "your"
+    const subject = "Application status changed"    
+     try {   
+         const result = await changeApplicationStatus( req.body);
+         const email = await getEmails(result.user_id);
+         await sendMail(email, body, subject)
+         return res.status(200).json(result)
+     } catch (e) {
+         return res.status(e.code).json(e)
+     }
+}
 
 module.exports = {
     adminCreateApplication,
@@ -108,5 +124,6 @@ module.exports = {
     createAcademy,
     getAllAcademyRecords,
     getAcademyNumbers,
-    getSpecificBatchController
+    getSpecificBatchController,
+    changeApplicationController
 }

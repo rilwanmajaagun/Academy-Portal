@@ -221,7 +221,7 @@ async function checkBatch(user_id,body) {
             return Promise.reject({
                 status: "error",
                 code: 409,
-                message: "Application As been submitted",
+                message: "Application has been submitted",
             });
         }
     } catch (e) {
