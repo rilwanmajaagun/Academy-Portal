@@ -38,7 +38,7 @@ const {
 router.post("/admin/login",loginMiddleWare,adminLogin)
 router.post("/signup",signupMiddleWare,signup);
 router.post("/login", loginMiddleWare,loginController)
-router.post("/application",applicationMiddleWare,applicationController)
+router.post("/application",applicationController) // return token and middle ware
 router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,adminCreateApplication)
 router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
 router.get("/application", verifyToken, getUserApplicationController)

@@ -38,7 +38,8 @@ async function loginController (req, res) {
 async function applicationController (req,res){
     const body = "your"
     const subject = "welcome to academy"
-    const user_id = res.locals.user.id
+    // const user_id = res.locals.user.id
+    const user_id = 15  // return user_id
     try{
         await checkBatch(user_id,req.body)
         email = await getEmails(user_id);

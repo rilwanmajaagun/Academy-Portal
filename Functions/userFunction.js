@@ -144,6 +144,9 @@ async function applicationForm (user_id,body){
     const currentYear = moment(d).format("YYYY");
     const application_status = "pending";
     const score = 0;
+    const batch_id="13"
+	const closure_date = "2020/06/22" 
+	const created_at ="2020/05/22"
     const {
         cv_url, 
         first_name, 
@@ -152,9 +155,10 @@ async function applicationForm (user_id,body){
         date_of_birth,
         address, university, 
         course_of_study, 
-        cgpa, batch_id, 
-        closure_date,
-        created_at, 
+        cgpa, 
+        // batch_id, 
+        // closure_date,
+        // created_at, 
     } = body;
     const birthYear = date_of_birth.slice(0,4)
     const age = currentYear-birthYear
