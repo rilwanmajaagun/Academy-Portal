@@ -151,7 +151,7 @@ async function userScores (req, res) {
         return res.status(e.code).json(e);
     }
 }
-
+// move this into userAnswer
 module.exports = {
     adminCreateApplication,
     getAllApplicantsResultDESCController,
