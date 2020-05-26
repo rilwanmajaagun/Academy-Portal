@@ -12,7 +12,12 @@ getAcademySofar,
 checkAcademyBatch,
 getCurrentBatch,
 getSpecificBatch,
-changeApplicationStatus
+changeApplicationStatus,
+createAssessment,
+createUserAnswer,
+getUserScore,
+changeApplicantScore,
+getBatch
 } = require("../Functions/adminFunction")
 const {
     getEmails,
@@ -102,6 +107,7 @@ async function getAcademyNumbers (req, res) {
         return res.status(e.code).json(e);
     }
 }
+
 async function changeApplicationController (req, res)  {
     const body = "your"
     const subject = "Application status changed"    
@@ -115,6 +121,37 @@ async function changeApplicationController (req, res)  {
      }
 }
 
+async function Assessments (req, res) {
+    try {
+        const result1 = await getBatch()
+        const result = await createAssessment(req.body,result1.current)
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function userAnswer (req, res) {
+    const user_id = res.locals.user.id
+    try {
+        const result = await createUserAnswer(req.body,user_id)
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function userScores (req, res) {
+    const user_id = res.locals.user.id
+    try {
+        const result = await getUserScore(user_id)
+        await changeApplicantScore(result,user_id)
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
 module.exports = {
     adminCreateApplication,
     getAllApplicantsResultDESCController,
@@ -125,5 +162,8 @@ module.exports = {
     getAllAcademyRecords,
     getAcademyNumbers,
     getSpecificBatchController,
-    changeApplicationController
+    changeApplicationController,
+    Assessments,
+    userAnswer,
+    userScores
 }

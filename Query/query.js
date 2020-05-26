@@ -53,23 +53,6 @@ const queries = {
   `
   UPDATE application_form SET application_status=($1) WHERE id=($2) RETURNING *
   `,
-  addAssessment: `
-    INSERT INTO assessment(
-      user_id,
-      batch_id,
-      closure_date,
-      instructions,
-      question,
-      total_application,
-      academy_so_far,
-      date_completed,
-      time_allocated,
-      no_of_question,
-      application_status
-      created_at, 
-      modified_at
-    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *
-  `,
   applcantDashboard: `
     SELECT * FROM assessment WHERE user_id=($1)
   `,
@@ -126,7 +109,40 @@ const queries = {
   getToken:`
   SELECT * FROM blacklist WHERE token = ($1)
   `,
+  addAssessment: `
+  INSERT INTO  question(
+    file_url,
+    question,
+    option_a,
+    option_b,
+    option_c,
+    option_d,
+    option_answer,
+    batch_id
+  ) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *
+`,
+getCorrectAnswer:`
+SELECT option_answer FROM question ORDER BY id
+`,
+userAnswer: `
+INSERT INTO userAn(
+  question_id,
+  user_id,
+  user_answer
+) VALUES($1, $2, $3) RETURNING *
+`,
+getUserAnswer:`
+SELECT user_answer FROM userAn WHERE user_id=($1) ORDER BY question_id 
+`,
+updateScore:
+`
+UPDATE application_form SET score=($1) WHERE user_id=($2) RETURNING *
+`,
+questionBatch:`
+SELECT batch_id FROM application_table ORDER BY batch_id DESC
+`,
 };
 
 
 module.exports = queries;
+

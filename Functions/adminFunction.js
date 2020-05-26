@@ -373,6 +373,7 @@ async function getCurrentBatch() {
         });
     }
 }
+
 async function changeApplicationStatus( body) {
     const d = new Date();
     // const modified_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
@@ -412,6 +413,178 @@ async function changeApplicationStatus( body) {
     }
 }
 
+async function createAssessment (body,batch_id){
+    const {
+        file_url,
+        question,
+        option_a,
+        option_b,
+        option_c,
+        option_d,
+        option_answer
+    } = body;
+    const queryObj = {
+        text: queries.addAssessment,
+        values: [
+            file_url,
+            question,
+            option_a,
+            option_b,
+            option_c,
+            option_d,
+            option_answer,
+            batch_id
+        ]
+    }
+    try{
+        const { rowCount} = await db.query(queryObj);
+        if ( rowCount == 0 ){
+            return Promise.reject({
+                status: "error",
+                code: 500,
+                message: "colud not create Assessment"
+            });
+        }
+        if ( rowCount > 0 ){
+            return Promise.resolve({
+                status: "success",
+                code: 201,
+                message: "Assessment created successfully"
+            })
+        };
+    }catch(e)
+        { 
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error creating Assessment"
+        })
+
+    }
+}
+
+async function createUserAnswer (body,user_id){
+    const {
+        question_id,
+        user_answer,
+    } = body;
+    const queryObj = {
+        text: queries.userAnswer,
+        values: [
+            question_id,
+            user_id,
+            user_answer,
+        ]
+    }
+    try{
+        const { rowCount} = await db.query(queryObj);
+        if ( rowCount == 0 ){
+            return Promise.reject({
+                status: "error",
+                code: 500,
+                message: "colud not create Answer"
+            });
+        }
+        if ( rowCount > 0 ){
+            return Promise.resolve({
+                status: "success",
+                code: 201,
+                message: "Answer created successfully"
+            })
+        };
+    }catch(e)
+        { 
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error creating Assessment"
+        })
+
+    }
+}
+
+async function getUserScore(user_id) {
+    const queryObj = {
+        text: queries.getCorrectAnswer,
+    };
+    const queryObj2 = {
+        text : queries.getUserAnswer,
+        values:[user_id]
+    }
+    try {
+        const { rows } = await db.query(queryObj);
+        const row = await db.query(queryObj2)
+    let score =0;
+    for(i=0;i<rows.length;i++){
+        if(rows[i].option_answer == row.rows[i].user_answer){
+            score =  score+1
+        }
+    }
+        return Promise.resolve(score);
+    } catch (e) {
+        console.log(e)
+        console.log(rows)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting score",
+        });
+    }
+}
+
+async function changeApplicantScore(score,user_id) {
+    const queryObj = {
+        text: queries.updateScore,
+        values: [score, user_id]
+    }
+    try {
+        const { rowCount } = await db.query(queryObj); 
+        if (rowCount === 0) {
+            return Promise.reject({
+                status: "Error",
+                code: 404,
+                message: "Cannot find applicant ."
+            });
+        }
+        if (rowCount > 0) {
+            return Promise.resolve({
+                status: "success",
+                code: 200,
+                message: "Applicant score updated successfully",
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error updating applicant score"
+        })
+    }
+}
+
+async function getBatch() {
+    const queryObj = {
+        text: queries.questionBatch,
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+           current:rows[0].batch_id
+        });
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting Batch",
+        });
+    }
+}
+
+
 module.exports = {
     createApplication,
     getSpecificBatch,
@@ -425,5 +598,10 @@ module.exports = {
     getAcademySofar,
     checkAcademyBatch,
     getCurrentBatch,
-    changeApplicationStatus
+    changeApplicationStatus,
+    createAssessment,
+    createUserAnswer,
+    getUserScore,
+    changeApplicantScore,
+    getBatch
 }

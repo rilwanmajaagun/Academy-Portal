@@ -17,7 +17,10 @@ const {
     getAllAcademyRecords,
     getAcademyNumbers,
     getSpecificBatchController,
-    changeApplicationController
+    changeApplicationController,
+    Assessments,
+    userAnswer,
+    userScores
 } = require("./Controller/adminController")
 const {
     signupMiddleWare, 
@@ -45,10 +48,10 @@ router.get("/specific_batch", verifyAdminToken, getSpecificBatchController)
 router.get("/getTotal", getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
-router.put("/status_change", verifyAdminToken, statusChangeMiddleWare, changeApplicationController)
+router.put("/status_change", verifyAdminToken,statusChangeMiddleWare,changeApplicationController)
 router.post("/logout",verifyToken,logoutController)
-
-
-
+router.post("/assessment",Assessments)
+router.post("/userAns",verifyToken,userAnswer)
+router.get("/score", verifyToken,userScores) // change to post wen user submit 
 
 module.exports = router
