@@ -11,6 +11,13 @@ app.listen(port, () => {
     console.log(`Application Listening on Port ${port}`)
 });
 
+app.all('*', (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', '*');
+    next();
+});
+
 app.get("/", (req, res) => {
     return res.status(200).json({
         message: "Welcome to Academy Portal Api"
