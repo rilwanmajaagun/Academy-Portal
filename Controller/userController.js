@@ -60,15 +60,7 @@ async function getUserApplicationController (req, res) {
         }
 }
 
-async function logoutController (req, res){
-    const token =  req.headers;
-    try{
-        const result = await logOut(token.token)
-        return res.status(200).json(result);
-    }catch(e){
-        return res.status(e.code).json(e);
-    }
-}
+
 
 
 module.exports = {
@@ -76,5 +68,5 @@ signup,
 loginController,
 applicationController,
 getUserApplicationController,
-logoutController
+
 }
