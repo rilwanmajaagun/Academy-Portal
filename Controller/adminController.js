@@ -21,7 +21,6 @@ getBatch,
 updateQuestion,
 checkIfBatchExistBefore,
 alreadySubmit,
-getBatch,
 getQuestion,
 getBatch_id,
 getUpdate
