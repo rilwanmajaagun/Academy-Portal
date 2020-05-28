@@ -15,7 +15,7 @@ async function createApplication (body){
         batch_id,
         instruction,
     } = body;
-    const link = ` ${link_url}?${batch_id}&${closure_date}`
+    const link = ` ${link_url}/enyata?id=${batch_id}=${closure_date}`
     const queryObj = {
         text: queries.createApplication,
         values: [
@@ -541,7 +541,7 @@ async function changeApplicantScore(score,user_id) {
     }
     try {
         const { rowCount } = await db.query(queryObj); 
-        if (rowCount === 0) {
+        if (rowCount == 0) {
             return Promise.reject({
                 status: "Error",
                 code: 404,
@@ -584,6 +584,95 @@ async function getBatch() {
     }
 }
 
+async function alreadySubmit (user_id) {
+    const queryObj = {
+        text: queries.checkIfUserSubmit,
+        values: [user_id]
+    }
+    try{
+        const { rowCount } = await db.query(queryObj)
+        if( rowCount == 0){
+            return Promise.resolve()
+        };
+        if( rowCount > 0 ){
+            return Promise.reject({
+                status:"error",
+                code:"400",
+                message: "Assessment already taken"
+            })
+        }
+    }catch(e){
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error checking table",
+        });
+    }
+}
+
+function shuffle (array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+async function getQuestion (batch_id) {
+    const queryObj = {
+        text: queries.getQuestion,
+        values:[batch_id]
+    };
+    try{
+        const { rows } = await db.query(queryObj)
+        return Promise.resolve(
+            shuffle(rows)
+        );
+    }catch(e){
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting Batch",
+        });
+    }
+}
+
+async function getBatch_id(user_id) {
+    const queryObj = {
+        text: queries.getQuestionBatch,
+        values:[user_id]
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+           batch:rows[0].batch_id
+        });
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting Batch_id",
+        });
+    }
+}
+
+async function getUpdate (){
+    const queryObj = {
+        text: queries.getUpdate
+    };
+    try{
+        const { rows } = await db.query(queryObj)
+        return Promise.resolve(
+        rows[0]
+        )
+    }catch(e){
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting Batch_id",
+        });
+    }
+}
 
 module.exports = {
     createApplication,
@@ -603,5 +692,9 @@ module.exports = {
     createUserAnswer,
     getUserScore,
     changeApplicantScore,
-    getBatch
+    getBatch,
+    alreadySubmit,
+    getQuestion,
+    getBatch_id,
+    getUpdate
 }

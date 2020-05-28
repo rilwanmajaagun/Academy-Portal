@@ -101,11 +101,6 @@ const queries = {
   currentBatch:`
   SELECT batch_id FROM application_form ORDER BY batch_id DESC
   `,
-  blackList:`
-  INSERT INTO blacklist(
-    token 
-  )VALUES ($1)
-  `,
   getToken:`
   SELECT * FROM blacklist WHERE token = ($1)
   `,
@@ -140,6 +135,18 @@ UPDATE application_form SET score=($1) WHERE user_id=($2) RETURNING *
 `,
 questionBatch:`
 SELECT batch_id FROM application_table ORDER BY batch_id DESC
+`,
+checkIfUserSubmit:`
+SELECT * FROM userAn WHERE user_id=($1) 
+`,
+getQuestion:`
+SELECT * FROM question WHERE batch_id=($1)
+`,
+getQuestionBatch:`
+SELECT batch_id FROM application_form WHERE user_id =($1) ORDER BY batch_id DESC
+`,
+getUpdate:`
+SELECT * FROM application_table ORDER BY batch_id DESC
 `,
 };
 
