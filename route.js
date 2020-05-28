@@ -20,7 +20,8 @@ const {
     changeApplicationController,
     Assessments,
     userAnswer,
-    userScores
+    userScores,
+    changequestionController
 } = require("./Controller/adminController")
 const {
     signupMiddleWare, 
@@ -53,5 +54,5 @@ router.post("/logout",verifyToken,logoutController)
 router.post("/assessment",Assessments)
 router.post("/userAns",verifyToken,userAnswer)
 router.get("/score", verifyToken,userScores) // change to post wen user submit 
-
+router.put("/update_question", verifyAdminToken, changequestionController)
 module.exports = router

@@ -156,7 +156,9 @@ async function applicationForm (user_id,body){
         closure_date,
         created_at, 
     } = body;
+    // pls explain this later
     const birthYear = date_of_birth.slice(0,4)
+    // just line 160
     const age = currentYear-birthYear
     const queryObj = {
         text: queries.applicantForm,
@@ -210,7 +212,7 @@ async function checkBatch(user_id,body) {
     const { batch_id } = body
     const queryObj = {
         text: queries.getBatch,
-        values: [user_id,batch_id],
+        values: [user_id, batch_id],
     };
     try {
         const { rowCount} = await db.query(queryObj);

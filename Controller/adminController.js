@@ -17,7 +17,8 @@ createAssessment,
 createUserAnswer,
 getUserScore,
 changeApplicantScore,
-getBatch
+getBatch,
+updateQuestion
 } = require("../Functions/adminFunction")
 const {
     getEmails,
@@ -151,6 +152,16 @@ async function userScores (req, res) {
         return res.status(e.code).json(e);
     }
 }
+
+async function changequestionController (req, res)  {
+    
+     try {   
+         const result = await updateQuestion( req.body);
+         return res.status(200).json(result)
+     } catch (e) {
+         return res.status(e.code).json(e)
+     }
+}
 // move this into userAnswer
 module.exports = {
     adminCreateApplication,
@@ -165,5 +176,6 @@ module.exports = {
     changeApplicationController,
     Assessments,
     userAnswer,
-    userScores
+    userScores,
+    changequestionController
 }
