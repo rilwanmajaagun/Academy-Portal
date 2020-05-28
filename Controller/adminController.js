@@ -17,6 +17,9 @@ createAssessment,
 createUserAnswer,
 getUserScore,
 changeApplicantScore,
+getBatch,
+updateQuestion,
+checkIfBatchExistBefore,
 alreadySubmit,
 getBatch,
 getQuestion,
@@ -29,7 +32,9 @@ const {
 } = require("../nodeMailer/nodemailer")
 
 async function adminCreateApplication (req, res) {
+    const {batch_id} = req.body 
     try {
+        await checkIfBatchExistBefore(batch_id)
         const result = await createApplication(req.body)
         return res.status(201).json(result);
     } catch (e) {
@@ -155,6 +160,16 @@ async function userScores (req, res) {
         return res.status(e.code).json(e);
     }
 }
+
+async function changequestionController (req, res)  {
+    
+     try {   
+         const result = await updateQuestion( req.body);
+         return res.status(200).json(result)
+     } catch (e) {
+         return res.status(e.code).json(e)
+     }
+}
 // move this into userAnswer
 
 async function getQues (req, res) {
@@ -192,6 +207,7 @@ module.exports = {
     Assessments,
     userAnswer,
     userScores,
+    changequestionController,
     getQues,
     getUpdatedApplication
 }
