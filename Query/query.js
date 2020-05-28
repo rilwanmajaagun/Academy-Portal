@@ -71,6 +71,10 @@ const queries = {
     updated_at
     ) VALUES($1, $2, $3,$4, $5, $6, $7) RETURNING *
   `,
+  checkIfBatchExists: `
+    SELECT * FROM application_table WHERE batch_id=($1)
+  `,
+
   getTotalApplication:`
   SELECT COUNT(*) 
   FROM application_form

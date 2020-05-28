@@ -18,7 +18,8 @@ createUserAnswer,
 getUserScore,
 changeApplicantScore,
 getBatch,
-updateQuestion
+updateQuestion,
+checkIfBatchExistBefore
 } = require("../Functions/adminFunction")
 const {
     getEmails,
@@ -26,7 +27,9 @@ const {
 } = require("../nodeMailer/nodemailer")
 
 async function adminCreateApplication (req, res) {
+    const {batch_id} = req.body 
     try {
+        await checkIfBatchExistBefore(batch_id)
         const result = await createApplication(req.body)
         return res.status(201).json(result);
     } catch (e) {

@@ -656,6 +656,34 @@ async function updateQuestion( body) {
     }
 }
 
+async function checkIfBatchExistBefore(batch_id) {
+    const queryObj = {
+      text: queries.checkIfBatchExists,
+      values: [batch_id]
+    };
+  
+    try {
+      const { rowCount } = await db.query(queryObj);
+      if (rowCount == 0) {
+        return Promise.resolve();
+      }
+      if (rowCount > 0) {
+        return Promise.reject({
+          status: "erorr",
+          code: 409,
+          message: "Batch Already Exists",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      return Promise.reject({
+        status: "error",
+        code: 500,
+        message: "Error finding batch",
+      });
+    }
+  }
+  
 module.exports = {
     createApplication,
     getSpecificBatch,
@@ -675,5 +703,6 @@ module.exports = {
     getUserScore,
     changeApplicantScore,
     getBatch,
-    updateQuestion
+    updateQuestion,
+    checkIfBatchExistBefore
 }
