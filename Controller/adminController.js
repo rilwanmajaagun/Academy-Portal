@@ -19,7 +19,11 @@ getUserScore,
 changeApplicantScore,
 getBatch,
 updateQuestion,
-checkIfBatchExistBefore
+checkIfBatchExistBefore,
+alreadySubmit,
+getQuestion,
+getBatch_id,
+getUpdate
 } = require("../Functions/adminFunction")
 const {
     getEmails,
@@ -65,9 +69,9 @@ async function adminLogin (req, res) {
 }
 
 async function getSpecificBatchController (req, res) {
-    const {batch_id} = req.body
+    const {batch_id} = req.params
     try {
-        const result = await getSpecificBatch(batch_id, req.body);
+        const result = await getSpecificBatch(batch_id);
         return res.status(202).json(result);
     } catch (e) {
         return res.status(e.code).json(e);
@@ -166,6 +170,28 @@ async function changequestionController (req, res)  {
      }
 }
 // move this into userAnswer
+
+async function getQues (req, res) {
+    const user_id = res.locals.user.id
+    try {
+        await alreadySubmit(user_id)
+        const batch_id = await getBatch_id(user_id)
+        const result = await getQuestion(batch_id.batch)
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function getUpdatedApplication (req, res) {
+    try {
+        const result = await getUpdate();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
 module.exports = {
     adminCreateApplication,
     getAllApplicantsResultDESCController,
@@ -180,5 +206,7 @@ module.exports = {
     Assessments,
     userAnswer,
     userScores,
-    changequestionController
+    changequestionController,
+    getQues,
+    getUpdatedApplication
 }

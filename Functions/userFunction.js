@@ -199,6 +199,7 @@ async function applicationForm (user_id,body){
         };
     }catch(e)
         { 
+        console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
@@ -273,34 +274,7 @@ async function getUserApplication(user_id) {
     }
 }
 
-async function logOut(token){
-    const queryObj ={
-        text: queries.blackList,
-        values: [token]
-    };
-    try {
-        const { rowCount } = await db.query(queryObj);
-        if (rowCount == 0) {
-            return Promise.reject({
-                status: "error",
-                code: 500,
-                message: "logout Error ",
-            });
-        }
-        if (rowCount > 0) {
-            return Promise.resolve({
-                message: "Logout successful",
-            });
-        }
-    } catch (e) {
-        console.log(e)
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error loging out",
-        });
-    }
-}
+
 
 
 module.exports = {
@@ -309,6 +283,5 @@ module.exports = {
     checkEmailAndPasswordMatch,
     applicationForm,
     checkBatch,
-    getUserApplication,
-    logOut
+    getUserApplication
 }
