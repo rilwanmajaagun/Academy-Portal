@@ -142,7 +142,8 @@ async function Assessments (req, res) {
 async function userAnswer (req, res) {
     const user_id = res.locals.user.id
     try {
-        const result = await createUserAnswer(req.body,user_id)
+        const batch_id = await getBatch_id(user_id)
+        const result = await createUserAnswer(req.body,user_id,batch_id.batch)
         return res.status(201).json(result);
     } catch (e) {
         return res.status(e.code).json(e);
@@ -152,8 +153,9 @@ async function userAnswer (req, res) {
 async function userScores (req, res) {
     const user_id = res.locals.user.id
     try {
-        const result = await getUserScore(user_id)
-        await changeApplicantScore(result,user_id)
+        const batch_id = await getBatch_id(user_id)
+        const result = await getUserScore(user_id,batch_id.batch)
+        await changeApplicantScore(result,user_id,batch_id.batch)
         return res.status(201).json(result);
     } catch (e) {
         return res.status(e.code).json(e);

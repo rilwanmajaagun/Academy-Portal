@@ -121,7 +121,7 @@ const queries = {
   ) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *
 `,
 getCorrectAnswer:`
-SELECT option_answer FROM question ORDER BY id
+SELECT option_answer FROM question WHERE batch_id=($1) ORDER BY id
 `,
 selectQuestion: `
 SELECT file_url, question,
@@ -143,15 +143,16 @@ userAnswer: `
 INSERT INTO userAn(
   question_id,
   user_id,
+  batch_id,
   user_answer
-) VALUES($1, $2, $3) RETURNING *
+) VALUES($1, $2, $3, $4) RETURNING *
 `,
 getUserAnswer:`
-SELECT user_answer FROM userAn WHERE user_id=($1) ORDER BY question_id 
+SELECT user_answer FROM userAn WHERE user_id=($1) AND batch_id=($2) ORDER BY question_id 
 `,
 updateScore:
 `
-UPDATE application_form SET score=($1) WHERE user_id=($2) RETURNING *
+UPDATE application_form SET score=($1) WHERE user_id=($2) AND batch_id=($3) RETURNING *
 `,
 questionBatch:`
 SELECT batch_id FROM application_table ORDER BY batch_id DESC

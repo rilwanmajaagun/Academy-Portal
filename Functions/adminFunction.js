@@ -464,18 +464,22 @@ async function createAssessment (body,batch_id){
     }
 }
 
-async function createUserAnswer (body,user_id){
-    const {
-        question_id,
-        user_answer,
-    } = body;
-    const queryObj = {
-        text: queries.userAnswer,
-        values: [
-            question_id,
-            user_id,
-            user_answer,
-        ]
+async function createUserAnswer (body,user_id,batch_id){
+    const answer = body
+    // const {
+    //     question_id,
+    //     user_answer,
+    // } = body;
+    for(let prop in answer){
+        queryObj = {
+            text: queries.userAnswer,
+            values: [
+                answer[prop].question_id,
+                user_id,
+                batch_id,
+                answer[0].user_answer,
+            ]     
+    }
     }
     try{
         const { rowCount} = await db.query(queryObj);
@@ -505,13 +509,14 @@ async function createUserAnswer (body,user_id){
     }
 }
 
-async function getUserScore(user_id) {
+async function getUserScore(user_id,batch_id) {
     const queryObj = {
         text: queries.getCorrectAnswer,
+        values:[batch_id]
     };
     const queryObj2 = {
         text : queries.getUserAnswer,
-        values:[user_id]
+        values:[user_id,batch_id]
     }
     try {
         const { rows } = await db.query(queryObj);
@@ -534,10 +539,10 @@ async function getUserScore(user_id) {
     }
 }
 
-async function changeApplicantScore(score,user_id) {
+async function changeApplicantScore(score,user_id,batch_id) {
     const queryObj = {
         text: queries.updateScore,
-        values: [score, user_id]
+        values: [score, user_id,batch_id]
     }
     try {
         const { rowCount } = await db.query(queryObj); 
