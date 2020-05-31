@@ -466,10 +466,6 @@ async function createAssessment (body,batch_id){
 
 async function createUserAnswer (body,user_id,batch_id){
     const answer = body
-    // const {
-    //     question_id,
-    //     user_answer,
-    // } = body;
     for(let prop in answer){
         queryObj = {
             text: queries.userAnswer,
@@ -477,36 +473,37 @@ async function createUserAnswer (body,user_id,batch_id){
                 answer[prop].question_id,
                 user_id,
                 batch_id,
-                answer[0].user_answer,
+                answer[prop].user_answer,
             ]     
-    }
-    }
-    try{
-        const { rowCount} = await db.query(queryObj);
-        if ( rowCount == 0 ){
-            return Promise.reject({
-                status: "error",
-                code: 500,
-                message: "colud not create Answer"
-            });
         }
-        if ( rowCount > 0 ){
-            return Promise.resolve({
-                status: "success",
-                code: 201,
-                message: "Answer created successfully"
-            })
-        };
-    }catch(e)
-        { 
-        console.log(e)
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error creating Assessment"
-        })
-
+        const { rowCount} = await db.query(queryObj);
+        
     }
+    // try{
+    //     if ( rowCount == 0 ){
+    //         return Promise.reject({
+    //             status: "error",
+    //             code: 500,
+    //             message: "colud not create Answer"
+    //         });
+    //     }
+    //     if ( rowCount > 0 ){
+    //         return Promise.resolve({
+    //             status: "success",
+    //             code: 201,
+    //             message: "Answer created successfully"
+    //         })
+    //     };
+    // }catch(e)
+    //     { 
+    //     console.log(e)
+    //     return Promise.reject({
+    //         status: "error",
+    //         code: 500,
+    //         message: "Error creating Assessment"
+    //     })
+
+    // }
 }
 
 async function getUserScore(user_id,batch_id) {

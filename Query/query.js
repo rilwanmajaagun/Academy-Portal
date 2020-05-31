@@ -131,8 +131,6 @@ option_c,
 option_d,
 option_answer FROM question WHERE batch_id=($1)
 `,
-
-
  updateQuestion:`
  UPDATE question SET  
  file_url=($1),
