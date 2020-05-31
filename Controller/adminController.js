@@ -144,23 +144,26 @@ async function userAnswer (req, res) {
     try {
         const batch_id = await getBatch_id(user_id)
         const result = await createUserAnswer(req.body,user_id,batch_id.batch)
+        // const batch_id = await getBatch_id(user_id)
+        const result2 = await getUserScore(user_id,batch_id.batch)
+        await changeApplicantScore(result2,user_id,batch_id.batch)
         return res.status(201).json(result);
     } catch (e) {
         return res.status(e.code).json(e);
     }
 }
 
-async function userScores (req, res) {
-    const user_id = res.locals.user.id
-    try {
-        const batch_id = await getBatch_id(user_id)
-        const result = await getUserScore(user_id,batch_id.batch)
-        await changeApplicantScore(result,user_id,batch_id.batch)
-        return res.status(201).json(result);
-    } catch (e) {
-        return res.status(e.code).json(e);
-    }
-}
+// async function userScores (req, res) {
+//     const user_id = res.locals.user.id
+//     try {
+//         const batch_id = await getBatch_id(user_id)
+//         const result = await getUserScore(user_id,batch_id.batch)
+//         await changeApplicantScore(result,user_id,batch_id.batch)
+//         return res.status(201).json(result);
+//     } catch (e) {
+//         return res.status(e.code).json(e);
+//     }
+// }
 
 async function changequestionController (req, res)  {
     
@@ -207,7 +210,7 @@ module.exports = {
     changeApplicationController,
     Assessments,
     userAnswer,
-    userScores,
+    // userScores,
     changequestionController,
     getQues,
     getUpdatedApplication

@@ -53,7 +53,7 @@ router.get("/specific_batch/:batch_id", verifyAdminToken, getSpecificBatchContro
 router.get("/getTotal", getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
-router.get("/score", verifyToken,userScores) // change to post wen user submit 
+// router.get("/score", verifyToken,userScores) // change to post wen user submit 
 router.put("/update_question", verifyAdminToken, changequestionController)
 router.get("/getQuestion", verifyToken,getQues)
 router.get("/getUpdate", getUpdatedApplication) //working
