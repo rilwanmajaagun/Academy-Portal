@@ -19,11 +19,11 @@ async function createNewUser(body) {
         const { rowCount, rows } = await db.query(queryObj);
         const response = rows[0];
         const tokens = generateUserToken(
-            response.id, 
-            response.first_name, 
-            response.last_name, 
-            response.email_address, 
-            response.phone_number, 
+            response.id,
+            response.first_name,
+            response.last_name,
+            response.email_address,
+            response.phone_number,
             response.is_admin
         );
         const data = {
@@ -33,7 +33,7 @@ async function createNewUser(body) {
         if (rowCount == 0) {
             return Promise.reject({
                 status: "error",
-                code: 500,
+                code: 400,
                 message: "Could not create user",
             });
         }
@@ -47,7 +47,6 @@ async function createNewUser(body) {
             });
         }
     } catch (e) {
-        console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
@@ -74,10 +73,9 @@ async function checkIfUserDoesNotExistBefore(email_address) {
             });
         }
     } catch (e) {
-        console.log(e)
         return Promise.reject({
             status: "error",
-            code: 500,
+            code: 404,
             message: "Error finding user",
         });
     }
@@ -109,11 +107,11 @@ async function checkEmailAndPasswordMatch(body) {
                     message: "Password is incorrect",
                 });
             }
-            const tokens = generateUserToken(result.id, 
-                result.first_name, 
-                result.last_name, 
-                result.email_address, 
-                result.phone_number, 
+            const tokens = generateUserToken(result.id,
+                result.first_name,
+                result.last_name,
+                result.email_address,
+                result.phone_number,
                 result.is_admin
             );
             const data = {
@@ -139,67 +137,64 @@ async function checkEmailAndPasswordMatch(body) {
     }
 }
 
-async function applicationForm (user_id,body){
+async function applicationForm(user_id, body) {
     const d = new Date();
     const currentYear = moment(d).format("YYYY");
     const application_status = "pending";
     const score = 0;
     const {
-        cv_url, 
-        first_name, 
-        last_name, 
-        email, 
+        cv_url,
+        first_name,
+        last_name,
+        email,
         date_of_birth,
-        address, university, 
-        course_of_study, 
-        cgpa, batch_id, 
+        address, university,
+        course_of_study,
+        cgpa, batch_id,
         closure_date,
-        created_at, 
+        created_at,
     } = body;
-    // pls explain this later
-    const birthYear = date_of_birth.slice(0,4)
-    // just line 160
-    const age = currentYear-birthYear
+    const birthYear = date_of_birth.slice(0, 4)
+    const age = currentYear - birthYear
     const queryObj = {
         text: queries.applicantForm,
         values: [
-            user_id, 
-            cv_url, 
-            first_name, 
-            last_name, 
-            email, 
-            date_of_birth, 
+            user_id,
+            cv_url,
+            first_name,
+            last_name,
+            email,
+            date_of_birth,
             age,
-            address, 
-            university, 
-            course_of_study, 
-            cgpa, 
-            batch_id, 
-            closure_date, 
-            score, 
+            address,
+            university,
+            course_of_study,
+            cgpa,
+            batch_id,
+            closure_date,
+            score,
             created_at,
             application_status
         ]
     }
-    try{
-        const { rowCount,rows} = await db.query(queryObj);
-        if ( rowCount == 0 ){
+    try {
+
+        const { rowCount, rows } = await db.query(queryObj);
+        if (rowCount == 0) {
             return Promise.reject({
                 status: "error",
-                code: 500,
+                code: 400,
                 message: "colud not create application"
             });
         }
-        if ( rowCount > 0 ){
+        if (rowCount > 0) {
             return Promise.resolve({
                 status: "success",
                 code: 201,
                 message: "Application sent"
             })
         };
-    }catch(e)
-        { 
-        console.log(e)
+    } catch (e) {
         return Promise.reject({
             status: "error",
             code: 500,
@@ -209,14 +204,14 @@ async function applicationForm (user_id,body){
     }
 }
 
-async function checkBatch(user_id,body) {
+async function checkBatch(user_id, body) {
     const { batch_id } = body
     const queryObj = {
         text: queries.getBatch,
         values: [user_id, batch_id],
     };
     try {
-        const { rowCount} = await db.query(queryObj);
+        const { rowCount } = await db.query(queryObj);
         if (rowCount == 0) {
             return Promise.resolve();
         }
@@ -228,7 +223,6 @@ async function checkBatch(user_id,body) {
             });
         }
     } catch (e) {
-        console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
@@ -246,22 +240,22 @@ async function getUserApplication(user_id) {
         const { rows, rowCount } = await db.query(queryObj);
         const result = rows[0];
         const data = {
-            result 
+            result
         }
         if (rowCount == 0) {
             return Promise.reject({
                 status: "erorr",
-                code: 400,
+                code: 404,
                 message: "User Application Not found. Please check back",
             });
         }
         if (rowCount > 0) {
             return Promise.resolve({
-              status: "success",
-              message: "User Application Found",
-            //   data: rows
-            Application_date: data.result.created_at,
-            Application_status: data.result.application_status
+                status: "success",
+                code: 200,
+                message: "User Application Found",
+                Application_date: data.result.created_at,
+                Application_status: data.result.application_status
             });
         }
     } catch (e) {
@@ -274,6 +268,40 @@ async function getUserApplication(user_id) {
     }
 }
 
+async function getUserDetails(id) {
+    const queryObj = {
+        text: queries.getuserName,
+        values: [id],
+    };
+    try {
+        const { rows,rowCount } = await db.query(queryObj);
+        const result = rows[0];
+        if (rowCount== 0) {
+            return Promise.reject({
+                status: "erorr",
+                code: 404,
+                message: "User  Not found",
+            });
+        }
+        if (rowCount>0) {
+            return Promise.resolve({
+                status: "success",
+                code: 200,
+                message: "User found",
+                email:result.email_address,
+                first_name:result.first_name,
+                last_name:result.last_name
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error user deatils",
+        });
+    }
+}
 
 
 
@@ -283,5 +311,6 @@ module.exports = {
     checkEmailAndPasswordMatch,
     applicationForm,
     checkBatch,
-    getUserApplication
+    getUserApplication,
+    getUserDetails
 }

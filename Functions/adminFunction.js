@@ -29,11 +29,12 @@ async function createApplication (body){
         ]
     }
     try{
+
         const { rowCount} = await db.query(queryObj);
         if ( rowCount == 0 ){
             return Promise.reject({
                 status: "error",
-                code: 500,
+                code: 400,
                 message: "colud not create application"
             });
         }
@@ -59,6 +60,7 @@ async function getAllApplicantsResultDESC() {
     const queryObj = {
         text: queries.getAllapplicantResultDESC
     };
+    
     try {
         const { rows } = await db.query(queryObj);
         return Promise.resolve({
