@@ -18,13 +18,17 @@ const {
     getAcademyNumbers,
     getSpecificBatchController,
     changeApplicationController,
-    Assessments,
-    userAnswer,
-    userScores,
-    changequestionController,
-    getQues,
     getUpdatedApplication
+    // userAnswer,
+    // changequestionController,
+    // getQues,
 } = require("./Controller/adminController")
+const {
+    userAnswer,  //working
+    changequestionController, 
+    getQues, //working
+    Assessments, //working
+} = require("./Controller/questionController")
 const {
     signupMiddleWare, 
     loginMiddleWare,
@@ -51,7 +55,7 @@ router.get("/application", verifyToken, getUserApplicationController) //working
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultDESCController) // remove later
 router.get("/applicants_asc/all", verifyAdminToken, getAllApplicantsResultASCController) //remove later
 router.get("/specific_batch/:batch_id", verifyAdminToken, getSpecificBatchController) //working
-router.get("/getTotal", getTotal)
+router.get("/getTotal", verifyAdminToken,getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
 router.get("/details", verifyToken,getDetails) 
