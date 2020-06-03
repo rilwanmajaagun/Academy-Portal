@@ -7,54 +7,45 @@ const { hashPassword, comparePassword, generateUserToken } = require("../Authori
 
 
 async function createAssessment (body,batch_id){
-    const {
-        file_url,
-        question,
-        option_a,
-        option_b,
-        option_c,
-        option_d,
-        option_answer
-    } = body;
-    const queryObj = {
-        text: queries.addAssessment,
-        values: [
-            file_url,
-            question,
-            option_a,
-            option_b,
-            option_c,
-            option_d,
-            option_answer,
-            batch_id
-        ]
-    }
-    try{
-        const { rowCount} = await db.query(queryObj);
-        if ( rowCount == 0 ){
-            return Promise.reject({
-                status: "error",
-                code: 500,
-                message: "colud not create Assessment"
-            });
+    try {
+        const question = body
+        var stored = 0;
+        for (let prop in question) {
+          queryObj = {
+            text: queries.addAssessment,
+            values: [
+              question[prop].file_url,
+              question[prop].question,
+              question[prop].option_a,
+              question[prop].option_b,
+              question[prop].option_c,
+              question[prop].option_d,
+              question[prop].option_answer,
+              batch_id
+            ]
+          }
+          const {rowCount } = await db.query(queryObj);
+          stored++;
         }
-        if ( rowCount > 0 ){
-            return Promise.resolve({
-                status: "success",
-                code: 201,
-                message: "Assessment created successfully"
-            })
-        };
-    }catch(e)
-        { 
-        console.log(e)
-        return Promise.reject({
+      } catch (e) {
+        if (stored < 1) {
+          return Promise.reject({
             status: "error",
-            code: 500,
-            message: "Error creating Assessment"
+            code: 400,
+            message: `Failed to store Assessments`
+          })
+        }
+        return Promise.resolve({
+          status: "success",
+          code: 200,
+          message: `Stored ${stored} out of ${prop.length} Assessments`
         })
-
-    }
+      }
+      return Promise.resolve({
+        status: "success",
+        code: 201,
+        message: "question created successfully"
+      })
 }
 
 async function createUserAnswer(body, user_id, batch_id) {
@@ -93,7 +84,7 @@ async function createUserAnswer(body, user_id, batch_id) {
       code: 201,
       message: "Answer created successfully"
     })
-  }
+}
 
 async function getUserScore(user_id,batch_id) {
     const queryObj = {
