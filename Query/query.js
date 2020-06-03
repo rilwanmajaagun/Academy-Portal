@@ -200,6 +200,18 @@ SELECT batch_id FROM application_form WHERE user_id =($1) ORDER BY batch_id DESC
 getUpdate:`
 SELECT * FROM application_table ORDER BY batch_id DESC
 `,
+assessmentStatus:`
+INSERT INTO assessment_details(
+  batch_id,
+  date_compose,
+  number_of_question,
+  time_allocated,
+  status
+)VALUES($1, $2, $3, $4, $5) RETURNING *
+`,
+checkIfBatchExistsInAssessmentStatus:`
+SELECT * FROM assessment_details WHERE batch_id=($1)
+`,
 };
 
 

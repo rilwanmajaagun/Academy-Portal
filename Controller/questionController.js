@@ -9,6 +9,8 @@ getBatch_id,
 updateQuestion,
 alreadySubmit,
 getQuestion,
+assessment_details,
+checkAssessmentDeatils
 } = require("../Functions/questionFunction")
 
 
@@ -56,10 +58,22 @@ async function getQues (req, res) {
     }
 }
 
+async function assessmentHistory (req, res) {
+    try {
+        const result1 = await getBatch()
+        await checkAssessmentDeatils(result1.current)
+        const result = await assessment_details(req.body,result1.current)
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
 
 module.exports = {
     userAnswer,
     changequestionController,
     getQues,
-    Assessments
+    Assessments,
+    assessmentHistory
 }

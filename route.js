@@ -28,6 +28,7 @@ const {
     changequestionController, 
     getQues, //working
     Assessments, //working
+    assessmentHistory
 } = require("./Controller/questionController")
 const {
     signupMiddleWare, 
@@ -50,6 +51,7 @@ router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,ad
 router.post("/assessment",verifyAdminToken,Assessments)
 router.post("/userAns",verifyToken,userAnswer) 
 router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
+router.post("/assessmentHistory",verifyAdminToken,assessmentHistory)
 router.put("/status_change", verifyAdminToken,statusChangeMiddleWare,changeApplicationController)
 router.get("/application", verifyToken, getUserApplicationController) //working
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultDESCController) // remove later

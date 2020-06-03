@@ -301,7 +301,6 @@ async function getBatch() {
            current:rows[0].batch_id
         });
     } catch (e) {
-        console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
@@ -309,6 +308,78 @@ async function getBatch() {
         });
     }
 }
+
+async function assessment_details (body,batch_id) {
+    const d = new Date();
+    const date_compose = moment(d).format("DD/MM/YY");
+    const { number_of_question,time_allocated } = body
+    const status = "Not Taken";
+     const queryObj = {
+        text: queries.assessmentStatus,
+        values:[
+        batch_id,
+        date_compose,
+        number_of_question,
+        time_allocated,
+        status
+        ]
+    }
+    try{
+        const { rowCount,rows } = await db.query(queryObj)
+        if( rowCount==0){
+            return Promise.reject({
+                status:'error',
+                code: 400,
+                message:"Error creating Assessment History"
+            })
+        }
+        if(rowCount>0){
+            return Promise.resolve({
+                status:"Success",
+                code:201,
+                message:"Assessment History created sucessfully"
+            })
+        }
+    }catch(e){
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error creating Assessment History",
+        });
+    }
+   
+}
+
+
+async function checkAssessmentDeatils (batch_id) {
+    const queryObj = {
+        text: queries.checkIfBatchExistsInAssessmentStatus,
+        values: [batch_id]
+    }
+    try{
+        const { rowCount } = await db.query(queryObj)
+        if( rowCount == 0){
+            return Promise.resolve()
+        };
+        if( rowCount > 0 ){
+            return Promise.reject({
+                status:"error",
+                code:"400",
+                message: "Assessment History Already Submitted"
+            })
+        }
+    }catch(e){
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error checking table",
+        });
+    }
+}
+
+
 
 module.exports = {
     createUserAnswer,
@@ -319,5 +390,7 @@ module.exports = {
     createAssessment,
     changeApplicantScore,
     getBatch_id,
-    getBatch
+    getBatch,
+    assessment_details,
+    checkAssessmentDeatils
 }
