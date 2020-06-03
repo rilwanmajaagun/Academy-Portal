@@ -212,6 +212,9 @@ INSERT INTO assessment_details(
 checkIfBatchExistsInAssessmentStatus:`
 SELECT * FROM assessment_details WHERE batch_id=($1)
 `,
+assessHistory:`
+SELECT * FROM assessment_details
+`,
 };
 
 

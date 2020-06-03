@@ -28,7 +28,8 @@ const {
     changequestionController, 
     getQues, //working
     Assessments, //working
-    assessmentHistory
+    assessmentHistory,
+    getHistorys
 } = require("./Controller/questionController")
 const {
     signupMiddleWare, 
@@ -64,6 +65,7 @@ router.get("/details", verifyToken,getDetails)
 router.put("/update_question", verifyAdminToken, changequestionController)
 router.get("/getQuestion", verifyToken,getQues)
 router.get("/getUpdate", getUpdatedApplication) //working
+router.get("/getHistory",verifyAdminToken,getHistorys) //working
 
 
 

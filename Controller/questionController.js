@@ -10,7 +10,8 @@ updateQuestion,
 alreadySubmit,
 getQuestion,
 assessment_details,
-checkAssessmentDeatils
+checkAssessmentDeatils,
+getHistory
 } = require("../Functions/questionFunction")
 
 
@@ -69,11 +70,20 @@ async function assessmentHistory (req, res) {
     }
 }
 
+async function getHistorys (req, res) {
+    try {
+        const result = await getHistory()
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
 
 module.exports = {
     userAnswer,
     changequestionController,
     getQues,
     Assessments,
-    assessmentHistory
+    assessmentHistory,
+    getHistorys
 }

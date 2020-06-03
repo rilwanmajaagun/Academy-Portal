@@ -379,6 +379,29 @@ async function checkAssessmentDeatils (batch_id) {
     }
 }
 
+async function getHistory() {
+    const queryObj = {
+        text: queries.assessHistory,
+    };
+    try {
+        const { rows } = await db.query(queryObj);
+        return Promise.resolve({
+            status:"success",
+            code:200,
+            message:"Assessment History",
+            rows
+            
+         
+        });
+    } catch (e) {
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting History",
+        });
+    }
+}
+
 
 
 module.exports = {
@@ -392,5 +415,6 @@ module.exports = {
     getBatch_id,
     getBatch,
     assessment_details,
-    checkAssessmentDeatils
+    checkAssessmentDeatils,
+    getHistory
 }
