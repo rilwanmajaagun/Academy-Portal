@@ -18,7 +18,8 @@ const {
     getAcademyNumbers,
     getSpecificBatchController,
     changeApplicationController,
-    getUpdatedApplication
+    getUpdatedApplication,
+    getCurrentAcademy
     // userAnswer,
     // changequestionController,
     // getQues,
@@ -66,6 +67,7 @@ router.put("/update_question", verifyAdminToken, changequestionController)
 router.get("/getQuestion", verifyToken,getQues)
 router.get("/getUpdate", getUpdatedApplication) //working
 router.get("/getHistory",verifyAdminToken,getHistorys) //working
+router.get("/getCurrentAcademy",verifyAdminToken,getCurrentAcademy) 
 
 
 

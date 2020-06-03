@@ -83,13 +83,18 @@ async function getTotal (req, res) {
         try {
             const currentBatch = await getCurrentBatch()
             const result = await getTotalApplication(currentBatch.current);
-            return res.status(200).json({
-                result,
-                batch:currentBatch.current
-            });
+            return res.status(200).json(result);
         } catch (e) {
             return res.status(e.code).json(e);
         }
+}
+async function getCurrentAcademy (req, res) {
+    try {
+        const result = await getCurrentBatch()
+        return res.status(200).json(result.current);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
 }
 
 async function createAcademy (req, res) {
@@ -202,6 +207,7 @@ module.exports = {
     getSpecificBatchController,
     changeApplicationController,
     getUpdatedApplication,
+    getCurrentAcademy 
     // Assessments,
     // userAnswer,
     // changequestionController,
