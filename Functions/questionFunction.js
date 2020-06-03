@@ -402,6 +402,32 @@ async function getHistory() {
     }
 }
 
+async function updateAssessmentStatus(batch_id){
+    const status = "Taken"
+    const queryObj={
+        text:queries.updateAssessmentStatus,
+        values:[status,batch_id]
+    }
+    try{
+        const {rowCount} = await db.query(queryObj)
+        if(rowCount==0){
+            return Promise.reject({
+                status:"Error",
+                code:"400",
+                message:"Error updating status"
+            })
+        };
+        if(rowCount > 0){
+            return Promise.resolve()
+        }
+    }catch(e){
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error checking table",
+        });
+    }
+}
 
 
 module.exports = {
@@ -416,5 +442,6 @@ module.exports = {
     getBatch,
     assessment_details,
     checkAssessmentDeatils,
-    getHistory
+    getHistory,
+    updateAssessmentStatus
 }

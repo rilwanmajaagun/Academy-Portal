@@ -326,6 +326,7 @@ async function getAcademySofar() {
            rows  
         });
     } catch (e) {
+        console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,

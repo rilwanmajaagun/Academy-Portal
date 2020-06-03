@@ -11,7 +11,8 @@ alreadySubmit,
 getQuestion,
 assessment_details,
 checkAssessmentDeatils,
-getHistory
+getHistory,
+updateAssessmentStatus
 } = require("../Functions/questionFunction")
 
 
@@ -32,6 +33,7 @@ async function userAnswer (req, res) {
         const result = await createUserAnswer(req.body,user_id,batch_id.batch)
         const result2 = await getUserScore(user_id,batch_id.batch)
         await changeApplicantScore(result2,user_id,batch_id.batch)
+        // await updateAssessmentStatus(batch_id.batch)
         return res.status(201).json(result);
     } catch (e) {
         return res.status(e.code).json(e);

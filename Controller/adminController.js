@@ -83,7 +83,10 @@ async function getTotal (req, res) {
         try {
             const currentBatch = await getCurrentBatch()
             const result = await getTotalApplication(currentBatch.current);
-            return res.status(200).json(result);
+            return res.status(200).json({
+                result,
+                batch:currentBatch.current
+            });
         } catch (e) {
             return res.status(e.code).json(e);
         }
