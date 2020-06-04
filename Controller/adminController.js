@@ -15,15 +15,6 @@ getSpecificBatch,
 changeApplicationStatus,
 getUpdate,
 checkIfBatchExistBefore,
-// createAssessment,
-// createUserAnswer,
-// getUserScore,
-// changeApplicantScore,
-// getBatch,
-// updateQuestion,
-// alreadySubmit,
-// getQuestion,
-// getBatch_id,
 
 } = require("../Functions/adminFunction")
 const {
@@ -147,51 +138,6 @@ async function getUpdatedApplication (req, res) {
     }
 }
 
-// async function Assessments (req, res) {
-//     try {
-//         const result1 = await getBatch()
-//         const result = await createAssessment(req.body,result1.current)
-//         return res.status(201).json(result);
-//     } catch (e) {
-//         return res.status(e.code).json(e);
-//     }
-// }
-
-// async function userAnswer (req, res) {
-//     const user_id = res.locals.user.id
-//     try {
-//         const batch_id = await getBatch_id(user_id)
-//         const result = await createUserAnswer(req.body,user_id,batch_id.batch)
-//         const result2 = await getUserScore(user_id,batch_id.batch)
-//         await changeApplicantScore(result2,user_id,batch_id.batch)
-//         return res.status(201).json(result);
-//     } catch (e) {
-//         return res.status(e.code).json(e);
-//     }
-// }
-
-
-
-// async function changequestionController (req, res)  {
-//      try {   
-//          const result = await updateQuestion( req.body);
-//          return res.status(200).json(result)
-//      } catch (e) {
-//          return res.status(e.code).json(e)
-//      }
-// }
-
-// async function getQues (req, res) {
-//     const user_id = res.locals.user.id
-//     try {
-//         await alreadySubmit(user_id)
-//         const batch_id = await getBatch_id(user_id)
-//         const result = await getQuestion(batch_id.batch)
-//         return res.status(201).json(result);
-//     } catch (e) {
-//         return res.status(e.code).json(e);
-//     }
-// }
 
 
 
@@ -208,8 +154,5 @@ module.exports = {
     changeApplicationController,
     getUpdatedApplication,
     getCurrentAcademy 
-    // Assessments,
-    // userAnswer,
-    // changequestionController,
-    // getQues,
+   
 }

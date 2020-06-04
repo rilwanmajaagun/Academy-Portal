@@ -37,7 +37,8 @@ async function loginController(req, res) {
 }
 
 async function applicationController(req, res) {
-    const body = "your"
+    const body = "Your Application is in Progress and being reviewed. Be sure we would get back to you shortly.Best Regards.Head of Human Resource. Enyata Academy"
+
     const subject = "welcome to academy"
     const user_id = res.locals.user.id
     try {

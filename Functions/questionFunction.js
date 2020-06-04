@@ -118,15 +118,6 @@ async function getUserScore(user_id,batch_id) {
 
 async function updateQuestion( body) {
     const d = new Date();
-    // const modified_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
-    // const { 
-    //         file_url,
-    //         question,
-    //         option_a,
-    //         option_b,
-    //         option_c,
-    //         option_d,
-    //         option_answer } = body
     let batch_id = body && body.batch_id;
     let file_url = body && body.file_url;
     let question = body && body.question;
@@ -157,7 +148,6 @@ async function updateQuestion( body) {
          option_c = option_c || rows[0].option_c
          option_d = option_d || rows[0].option_d
          option_answer = option_answer || rows[0].option_answer
-        // const batch_id = body && body.batch_id || rows[0].batch_id
         const queryObj2 = {
             text: queries.updateQuestion,
             values: [
