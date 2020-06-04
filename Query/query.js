@@ -213,7 +213,7 @@ checkIfBatchExistsInAssessmentStatus:`
 SELECT * FROM assessment_details WHERE batch_id=($1)
 `,
 assessHistory:`
-SELECT * FROM assessment_details
+SELECT * FROM assessment_details ORDER BY batch_id ASC
 `,
 updateAssessmenTStatus:`
 UPDATE assessment_details SET status=($1) WHERE batch_id=($2) RETURNING *`
