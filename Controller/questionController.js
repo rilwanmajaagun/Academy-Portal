@@ -30,7 +30,6 @@ async function userAnswer (req, res) {
     const user_id = res.locals.user.id
     try {
         const batch_id = await getBatch_id(user_id)
-        await updateAssessmentStatus(batch_id.batch)
         const result = await createUserAnswer(req.body,user_id,batch_id.batch)
         const result2 = await getUserScore(user_id,batch_id.batch)
         await changeApplicantScore(result2,user_id,batch_id.batch)
