@@ -125,6 +125,9 @@ const queries = {
   currentBatch:`
   SELECT batch_id FROM application_form ORDER BY batch_id DESC
   `,
+  allBatch:`
+  SELECT batch_id FROM application_table ORDER BY batch_id ASC
+  `,
 
   getToken:`
   SELECT * FROM blacklist WHERE token = ($1)

@@ -15,6 +15,7 @@ getSpecificBatch,
 changeApplicationStatus,
 getUpdate,
 checkIfBatchExistBefore,
+getAllBatch
 
 } = require("../Functions/adminFunction")
 const {
@@ -139,6 +140,15 @@ async function getUpdatedApplication (req, res) {
 }
 
 
+async function getAllBatchs (req, res) {
+    try {
+        const result = await getAllBatch();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
 
 
 module.exports = {
@@ -153,6 +163,7 @@ module.exports = {
     getSpecificBatchController,
     changeApplicationController,
     getUpdatedApplication,
-    getCurrentAcademy 
+    getCurrentAcademy,
+    getAllBatchs
    
 }

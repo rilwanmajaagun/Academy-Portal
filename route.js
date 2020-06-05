@@ -19,7 +19,8 @@ const {
     getSpecificBatchController,
     changeApplicationController,
     getUpdatedApplication,
-    getCurrentAcademy
+    getCurrentAcademy,
+    getAllBatchs
 } = require("./Controller/adminController")
 const {
     userAnswer, 
@@ -54,6 +55,7 @@ router.post("/userAns",verifyToken,userAnswer)
 router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
 router.post("/assessmentHistory",verifyAdminToken,assessmentHistory)
 router.put("/status_change", verifyAdminToken,statusChangeMiddleWare,changeApplicationController)
+router.put("/update_question2/:batch_id", verifyAdminToken, changequestionController2)
 router.get("/application", verifyToken, getUserApplicationController) 
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultDESCController) 
 router.get("/applicants_asc/all", verifyAdminToken, getAllApplicantsResultASCController) 
@@ -68,7 +70,8 @@ router.get("/getUpdate", getUpdatedApplication)
 router.get("/getHistory",verifyAdminToken,getHistorys)
 router.get("/getCurrentAcademy",verifyAdminToken,getCurrentAcademy) 
 router.get("/getQues/:batch_id",getQuesByparams)
-router.put("/update_question2/:batch_id", verifyAdminToken, changequestionController2)
+router.get("/getBatch",getAllBatchs)
+
 
 
 

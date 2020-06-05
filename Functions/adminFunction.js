@@ -460,7 +460,28 @@ async function checkIfBatchExistBefore(batch_id) {
         message: "Error finding batch",
       });
     }
-  }
+}
+
+async function getAllBatch (){
+    const queryObj = {
+        text: queries.allBatch
+    }
+    try{
+        const{ rows } = await db.query(queryObj)
+        return Promise.resolve({
+            status: "success",
+            code: 200,
+            message: "Success fetching all batch",
+            rows
+        })
+    }catch(e){
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error finding batch",
+        })
+    }
+}
 
 
   
@@ -480,5 +501,6 @@ module.exports = {
     changeApplicationStatus,
     getUpdate,
     checkIfBatchExistBefore,
+    getAllBatch
   
 }
