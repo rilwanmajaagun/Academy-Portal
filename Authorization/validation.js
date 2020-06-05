@@ -13,7 +13,7 @@ const generateUserToken = (id,first_name,last_name,email_address,phone_number,is
     const key = process.env.SECRET_KEY;
     const token = jwt.sign({ id,first_name,last_name,email_address,phone_number,is_admin }, key, 
         { 
-            // expiresIn: '1h' 
+           
     });
     return token;
 }

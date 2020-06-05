@@ -20,17 +20,16 @@ const {
     changeApplicationController,
     getUpdatedApplication,
     getCurrentAcademy
-    // userAnswer,
-    // changequestionController,
-    // getQues,
 } = require("./Controller/adminController")
 const {
-    userAnswer,  //working
-    changequestionController, 
-    getQues, //working
-    Assessments, //working
+    userAnswer, 
+    // changequestionController, 
+    getQues,
+    Assessments,
     assessmentHistory,
-    getHistorys
+    getHistorys,
+    getQuesByparams,
+    changequestionController2, 
 } = require("./Controller/questionController")
 const {
     signupMiddleWare, 
@@ -63,11 +62,13 @@ router.get("/getTotal", verifyAdminToken,getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
 router.get("/details", verifyToken,getDetails) 
-router.put("/update_question", verifyAdminToken, changequestionController)
+// router.put("/update_question/:batch_id", verifyAdminToken, changequestionController)
 router.get("/getQuestion", verifyToken,getQues)
 router.get("/getUpdate", getUpdatedApplication)
 router.get("/getHistory",verifyAdminToken,getHistorys)
 router.get("/getCurrentAcademy",verifyAdminToken,getCurrentAcademy) 
+router.get("/getQues/:batch_id",getQuesByparams)
+router.put("/update_question2/:batch_id", verifyAdminToken, changequestionController2)
 
 
 

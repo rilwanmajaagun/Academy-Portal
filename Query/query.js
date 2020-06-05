@@ -160,7 +160,7 @@ option_answer FROM question WHERE batch_id=($1)
  UPDATE question SET  
  file_url=($1),
  question= ($2), option_a= ($3), option_b= ($4), option_c= ($5), option_d= ($6), option_answer= ($7) 
- WHERE batch_id = ($8) RETURNING *
+ WHERE batch_id = ($8) AND id = ($9) RETURNING *
  `,
 
 userAnswer: `
@@ -216,7 +216,8 @@ assessHistory:`
 SELECT * FROM assessment_details ORDER BY batch_id ASC
 `,
 updateAssessmenTStatus:`
-UPDATE assessment_details SET status=($1) WHERE batch_id=($2) RETURNING *`
+UPDATE assessment_details SET status=($1) WHERE batch_id=($2)
+`
 };
 
 

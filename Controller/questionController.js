@@ -12,7 +12,8 @@ getQuestion,
 assessment_details,
 checkAssessmentDeatils,
 getHistory,
-updateAssessmentStatus
+updateAssessmentStatus,
+updatequestion2
 } = require("../Functions/questionFunction")
 
 
@@ -30,6 +31,7 @@ async function userAnswer (req, res) {
     const user_id = res.locals.user.id
     try {
         const batch_id = await getBatch_id(user_id)
+        await updateAssessmentStatus(batch_id.batch)
         const result = await createUserAnswer(req.body,user_id,batch_id.batch)
         const result2 = await getUserScore(user_id,batch_id.batch)
         await changeApplicantScore(result2,user_id,batch_id.batch)
@@ -39,14 +41,15 @@ async function userAnswer (req, res) {
     }
 }
 
-async function changequestionController (req, res)  {
-    try {   
-        const result = await updateQuestion( req.body);
-        return res.status(200).json(result)
-    } catch (e) {
-        return res.status(e.code).json(e)
-    }
-}
+// async function changequestionController (req, res)  {
+//     const { batch_id } = req.params
+//     try {   
+//         const result = await updateQuestion( req.body,batch_id);
+//         return res.status(200).json(result)
+//     } catch (e) {
+//         return res.status(e.code).json(e)
+//     }
+// }
 
 async function getQues (req, res) {
     const user_id = res.locals.user.id
@@ -80,11 +83,36 @@ async function getHistorys (req, res) {
     }
 }
 
+async function getQuesByparams (req, res) {
+    const { batch_id } = req.params
+    try {
+        const result = await getQuestion(batch_id)
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function changequestionController2 (req, res)  {
+    const { batch_id } = req.params
+    try {   
+        const result = await updatequestion2( req.body,batch_id);
+        return res.status(200).json(result)
+    } catch (e) {
+        return res.status(e.code).json(e)
+    }
+}
+
+
+
+
 module.exports = {
     userAnswer,
-    changequestionController,
+    // changequestionController,
     getQues,
     Assessments,
     assessmentHistory,
-    getHistorys
+    getHistorys,
+    getQuesByparams,
+    changequestionController2
 }
