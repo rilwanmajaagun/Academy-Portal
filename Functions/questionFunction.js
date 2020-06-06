@@ -28,7 +28,7 @@ async function createAssessment (body,batch_id){
           stored++;
         }
       } catch (e) {
-        if (stored < 1) {
+        if (stored < 0) {
           return Promise.reject({
             status: "error",
             code: 400,
