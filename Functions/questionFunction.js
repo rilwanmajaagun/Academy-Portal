@@ -27,19 +27,21 @@ async function createAssessment (body,batch_id){
           const {rowCount } = await db.query(queryObj);
           stored++;
         }
+        if (stored<1) {
+            return Promise.reject({
+              status: "error",
+              code: 400,
+              message: `Failed to store Assessments`
+            })
+          }
       } catch (e) {
-        if (stored < 0) {
+        if (stored < 1) {
           return Promise.reject({
             status: "error",
             code: 400,
             message: `Failed to store Assessments`
           })
         }
-        return Promise.resolve({
-          status: "success",
-          code: 200,
-          message: `Stored ${stored} out of ${prop.length} Assessments`
-        })
       }
       return Promise.resolve({
         status: "success",
