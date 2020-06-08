@@ -118,69 +118,6 @@ async function getUserScore(user_id,batch_id) {
     }
 }
 
-// async function updateQuestion( body,batch_id) {
-    
-//     const d = new Date();
-//     // let batch_id = body && body.batch_id;
-//     let file_url = body && body.file_url;
-//     let question = body && body.question;
-//     let option_a = body && body. option_a;
-//     let option_b = body && body.option_b;
-//     let option_c = body && body.option_c;
-//     let option_d = body && body.option_d;
-//     let option_answer = body && body.option_answer;
-//     const queryObj = {
-//         text: queries.selectQuestion,
-//         values: [batch_id]
-//     } 
-//     try {
-//         const { rows, rowCount } = await db.query(queryObj);
-  
-//         if (rowCount === 0) {
-//             return Promise.reject({
-//                 status: "Error",
-//                 code: 404,
-//                 message: "Cannot find applicant Id."
-//             });
-//         }
-      
-//          file_url= file_url || rows[0].file_url
-//          question = question || rows[0].question
-//          option_a = option_a || rows[0].option_a
-//          option_b = option_b || rows[0].option_b
-//          option_c = option_c || rows[0].option_c
-//          option_d = option_d || rows[0].option_d
-//          option_answer = option_answer || rows[0].option_answer
-//         const queryObj2 = {
-//             text: queries.updateQuestion,
-//             values: [
-//                 file_url,
-//                 question,
-//                 option_a,
-//                 option_b,
-//                 option_c,
-//                 option_d,
-//                 option_answer,
-//                 batch_id
-//             ]
-//         }
-//          await db.query(queryObj2);
-//         return Promise.resolve({
-//             status: "success",
-//             code: 200,
-//             message: "question updated successfully",
-//               });
-//     } catch (e) {
-//         console.log(e)
-//         return Promise.reject({
-//             status: "error",
-//             code: 500,
-          
-//            message: "Error updating question"
-//         });
-//     }
-// }
-
 async function updatequestion2 (body,batch_id){
     try {
         const question = body
@@ -287,10 +224,10 @@ async function getQuestion (batch_id) {
     }
 }
 
-async function alreadySubmit (user_id) {
+async function alreadySubmit (user_id,batch_id) {
     const queryObj = {
         text: queries.checkIfUserSubmit,
-        values: [user_id]
+        values: [user_id,batch_id]
     }
     try{
         const { rowCount } = await db.query(queryObj)
@@ -509,7 +446,6 @@ async function updateAssessmentStatus(batch_id){
 module.exports = {
     createUserAnswer,
     getUserScore,
-    // updateQuestion,
     getQuestion,
     alreadySubmit,
     createAssessment,

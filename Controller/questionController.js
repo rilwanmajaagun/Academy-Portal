@@ -6,7 +6,6 @@ getUserScore,
 changeApplicantScore,
 getBatch,
 getBatch_id,
-updateQuestion,
 alreadySubmit,
 getQuestion,
 assessment_details,
@@ -41,21 +40,11 @@ async function userAnswer (req, res) {
     }
 }
 
-// async function changequestionController (req, res)  {
-//     const { batch_id } = req.params
-//     try {   
-//         const result = await updateQuestion( req.body,batch_id);
-//         return res.status(200).json(result)
-//     } catch (e) {
-//         return res.status(e.code).json(e)
-//     }
-// }
-
 async function getQues (req, res) {
     const user_id = res.locals.user.id
     try {
-        await alreadySubmit(user_id)
         const batch_id = await getBatch_id(user_id)
+        await alreadySubmit(user_id,batch_id.batch)
         const result = await getQuestion(batch_id.batch)
         return res.status(201).json(result);
     } catch (e) {
@@ -108,7 +97,6 @@ async function changequestionController2 (req, res)  {
 
 module.exports = {
     userAnswer,
-    // changequestionController,
     getQues,
     Assessments,
     assessmentHistory,

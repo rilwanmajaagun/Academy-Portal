@@ -42,6 +42,7 @@ async function getAllApplicantsResultDESCController (req, res) {
         return res.status(e.code).json(e);
     }
 }
+
 async function getAllApplicantsResultASCController (req, res) {
     try {
         const result = await getAllApplicantsResultASC();
@@ -138,7 +139,6 @@ async function getUpdatedApplication (req, res) {
         return res.status(e.code).json(e);
     }
 }
-
 
 async function getAllBatchs (req, res) {
     try {

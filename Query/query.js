@@ -189,7 +189,7 @@ SELECT batch_id FROM application_table ORDER BY batch_id DESC
 `,
 
 checkIfUserSubmit:`
-SELECT * FROM userAn WHERE user_id=($1) 
+SELECT * FROM userAn WHERE user_id=($1) AND batch_id=($2)
 `,
 
 getQuestion:`
