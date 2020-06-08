@@ -18,12 +18,14 @@ createUserAnswer,
 getUserScore,
 changeApplicantScore,
 getBatch,
-updateQuestion,
+// updateQuestion,
 checkIfBatchExistBefore,
 alreadySubmit,
 getQuestion,
 getBatch_id,
-getUpdate
+getUpdate,
+checkId,
+update
 } = require("../Functions/adminFunction")
 const {
     getEmails,
@@ -161,9 +163,11 @@ async function userScores (req, res) {
 }
 
 async function changequestionController (req, res)  {
-    
-     try {   
-         const result = await updateQuestion( req.body);
+    const { id } = req.params;
+     try {  
+         await  checkId(id);
+         const result = await update(req.body);
+        //  const result = await updateQuestion( req.body);
          return res.status(200).json(result)
      } catch (e) {
          return res.status(e.code).json(e)

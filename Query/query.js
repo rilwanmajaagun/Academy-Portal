@@ -129,7 +129,7 @@ option_a,
 option_b,
 option_c,
 option_d,
-option_answer FROM question WHERE batch_id=($1)
+option_answer,batch_id FROM question WHERE id=($1) 
 `,
 
 
@@ -137,7 +137,7 @@ option_answer FROM question WHERE batch_id=($1)
  UPDATE question SET  
  file_url=($1),
  question= ($2), option_a= ($3), option_b= ($4), option_c= ($5), option_d= ($6), option_answer= ($7) 
- WHERE batch_id = ($8) RETURNING *
+ WHERE id = ($8) RETURNING *
  `,
 userAnswer: `
 INSERT INTO userAn(

@@ -6,53 +6,54 @@ const { hashPassword, comparePassword, generateUserToken } = require("../Authori
 
 
 async function createApplication (body){
-    const d = new Date();
-    const created_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
-    const {
-        file_url,
-        link_url,
-        closure_date,
-        batch_id,
-        instruction,
-    } = body;
-    const link = ` ${link_url}/enyata?id=${batch_id}=${closure_date}`
-    const queryObj = {
-        text: queries.createApplication,
-        values: [
-            file_url,
-            link,
-            closure_date,
-            batch_id,
-            instruction,
-            created_at,
-            created_at
-        ]
-    }
-    try{
-        const { rowCount} = await db.query(queryObj);
-        if ( rowCount == 0 ){
-            return Promise.reject({
-                status: "error",
-                code: 500,
-                message: "colud not create application"
-            });
-        }
-        if ( rowCount > 0 ){
-            return Promise.resolve({
-                status: "success",
-                code: 201,
-                message: "Application created successfully"
-            })
-        };
-    }catch(e)
-        { 
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error creating Application"
-        })
+    console.log(body)
+    // const d = new Date();
+    // const created_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
+    // const {
+    //     file_url,
+    //     link_url,
+    //     closure_date,
+    //     batch_id,
+    //     instruction,
+    // } = body;
+    // const link = ` ${link_url}/enyata?id=${batch_id}=${closure_date}`
+    // const queryObj = {
+    //     text: queries.createApplication,
+    //     values: [
+    //         file_url,
+    //         link,
+    //         closure_date,
+    //         batch_id,
+    //         instruction,
+    //         created_at,
+    //         created_at
+    //     ]
+    // }
+    // try{
+    //     const { rowCount} = await db.query(queryObj);
+    //     if ( rowCount == 0 ){
+    //         return Promise.reject({
+    //             status: "error",
+    //             code: 500,
+    //             message: "colud not create application"
+    //         });
+    //     }
+    //     if ( rowCount > 0 ){
+    //         return Promise.resolve({
+    //             status: "success",
+    //             code: 201,
+    //             message: "Application created successfully"
+    //         })
+    //     };
+    // }catch(e)
+    //     { 
+    //     return Promise.reject({
+    //         status: "error",
+    //         code: 500,
+    //         message: "Error creating Application"
+    //     })
 
-    }
+    // }
 }
 // this is in descending order
 async function getAllApplicantsResultDESC() {
@@ -584,78 +585,159 @@ async function getBatch() {
     }
 }
 
-async function updateQuestion( body) {
-    const d = new Date();
-    // const modified_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
-    // const { 
-    //         file_url,
-    //         question,
-    //         option_a,
-    //         option_b,
-    //         option_c,
-    //         option_d,
-    //         option_answer } = body
-    let batch_id = body && body.batch_id;
-    let file_url = body && body.file_url;
-    let question = body && body.question;
-    let option_a = body && body. option_a;
-    let option_b = body && body.option_b;
-    let option_c = body && body.option_c;
-    let option_d = body && body.option_d;
-    let option_answer = body && body.option_answer;
+// async function updateQuestion( id,body) {
+//     const d = new Date();
+//     const modified_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
+ 
+    
+//     let file_url = body && body.file_url;
+//     let question = body && body.question;
+//     let option_a = body && body. option_a;
+//     let option_b = body && body.option_b;
+//     let option_c = body && body.option_c;
+//     let option_d = body && body.option_d;
+//     let option_answer = body && body.option_answer;
+//     let batch_id = body && body.batch_id;
+//     const queryObj = {
+//         text: queries.selectQuestion,
+//         values: [id]
+//     } 
+//     try {
+//         const { rows, rowCount } = await db.query(queryObj);
+  
+//         if (rowCount === 0) {
+//             return Promise.reject({
+//                 status: "Error",
+//                 code: 404,
+//                 message: "Cannot find applicant Id."
+//             });
+//         }
+      
+//          file_url= file_url || rows[0].file_url
+//          question = question || rows[0].question
+//          option_a = option_a || rows[0].option_a
+//          option_b = option_b || rows[0].option_b
+//          option_c = option_c || rows[0].option_c
+//          option_d = option_d || rows[0].option_d
+//          option_answer = option_answer || rows[0].option_answer
+//         // batch_id = batch_id || rows[0].batch_id
+//         const queryObj2 = {
+//             text: queries.updateQuestion,
+//             values: [
+//                 file_url,
+//                 question,
+//                 option_a,
+//                 option_b,
+//                 option_c,
+//                 option_d,
+//                 option_answer,
+//                 batch_id
+//             ]
+//         }
+//          await db.query(queryObj2);
+//         return Promise.resolve({
+//             status: "success",
+//             code: 200,
+//             message: "question updated successfully",
+//               });
+//     } catch (e) {
+//         console.log(e)
+//         return Promise.reject({
+//             status: "error",
+//             code: 500,
+          
+//            message: "Error updating question"
+//         });
+//     }
+// }
+async function checkId (id){
+    
+    // let file_url = body && body.file_url;
+    // let question = body && body.question;
+    // let option_a = body && body. option_a;
+    // let option_b = body && body.option_b;
+    // let option_c = body && body.option_c;
+    // let option_d = body && body.option_d;
+    // let option_answer = body && body.option_answer;
+    // let batch_id = body && body.batch_id;
+    
     const queryObj = {
         text: queries.selectQuestion,
-        values: [batch_id]
+        values: [id]
     } 
     try {
-        const { rows, rowCount } = await db.query(queryObj);
-  
-        if (rowCount === 0) {
+                const { rows, rowCount } = await db.query(queryObj);
+          
+                if (rowCount === 0) {
+                    return Promise.reject({
+                        status: "error",
+                        code: 400,
+                        message: "try again"
+                    });
+                }
+                if (rowCount > 0) {
+                    return Promise.resolve();
+                }             
+} catch (e) {
+            console.log(e)
             return Promise.reject({
-                status: "Error",
-                code: 404,
-                message: "Cannot find applicant Id."
+                status: "error",
+                code: 500,           
+               message: "Error finding question"
             });
         }
-      
-         file_url= file_url || rows[0].file_url
-         question = question || rows[0].question
-         option_a = option_a || rows[0].option_a
-         option_b = option_b || rows[0].option_b
-         option_c = option_c || rows[0].option_c
-         option_d = option_d || rows[0].option_d
-         option_answer = option_answer || rows[0].option_answer
-        // const batch_id = body && body.batch_id || rows[0].batch_id
-        const queryObj2 = {
-            text: queries.updateQuestion,
-            values: [
-                file_url,
-                question,
-                option_a,
-                option_b,
-                option_c,
-                option_d,
-                option_answer,
-                batch_id
-            ]
-        }
-         await db.query(queryObj2);
-        return Promise.resolve({
-            status: "success",
-            code: 200,
-            message: "question updated successfully",
-              });
-    } catch (e) {
-        console.log(e)
-        return Promise.reject({
-            status: "error",
-            code: 500,
-          
-           message: "Error updating question"
-        });
-    }
-}
 
+}
+async function update(body) {
+            const file_url= body || body.file_url
+           const  question = body || body.question
+            const option_a = body || body.option_a
+            const option_b = body || body.option_b
+            const option_c =body || body.option_c
+            const option_d = body || body.option_d
+            const option_answer = body || body.option_answer
+            const batch_id = body || body.batch_id
+            const queryObj2 = {
+                text: queries.updateQuestion,
+                values: [
+                    file_url,
+                    question,
+                    option_a,
+                    option_b,
+                    option_c,
+                    option_d,
+                    option_answer,
+                    batch_id
+                ]
+            }
+            try {
+                const { rows, rowCount } = await db.query(queryObj2);
+          
+                if (rowCount === 0) {
+                    return Promise.reject({
+                        status: "Error",
+                        code: 404,
+                        message: "Cannot update question." 
+                    });
+                }
+                if (rowCount > 0) {
+                    return Promise.resolve({
+                        status: "success",
+                        code: 201,
+                        message: "updated successfully"
+                    });
+                }
+              
+} catch (e) {
+            console.log(e)
+            return Promise.reject({
+                status: "error",
+                code: 500,
+              
+               message: "Error finding question"
+            });
+        }
+}
 async function alreadySubmit (user_id) {
     const queryObj = {
         text: queries.checkIfUserSubmit,
@@ -794,10 +876,12 @@ module.exports = {
     getUserScore,
     changeApplicantScore,
     getBatch,
-    updateQuestion,
+    // updateQuestion,
     checkIfBatchExistBefore,
     alreadySubmit,
     getQuestion,
     getBatch_id,
-    getUpdate
+    getUpdate,
+    checkId,
+    update
 }
