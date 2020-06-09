@@ -3,8 +3,10 @@ const router = express.Router();
 const {
     signup, 
     loginController,
+    passwordChangeController,
     applicationController,
-    getUserApplicationController
+    getUserApplicationController,
+    getDetails
 } = require("./Controller/userController");
 const {
     adminCreateApplication,
@@ -17,16 +19,24 @@ const {
     getAcademyNumbers,
     getSpecificBatchController,
     changeApplicationController,
-    Assessments,
-    userAnswer,
-    userScores,
-    changequestionController,
-    getQues,
-    getUpdatedApplication
+    getUpdatedApplication,
+    getCurrentAcademy,
+    getAllBatchs
 } = require("./Controller/adminController")
+const {
+    userAnswer, 
+    // changequestionController, 
+    getQues,
+    Assessments,
+    assessmentHistory,
+    getHistorys,
+    getQuesByparams,
+    changequestionController2, 
+} = require("./Controller/questionController")
 const {
     signupMiddleWare, 
     loginMiddleWare,
+    forgetpasswordMiddleWare,
     applicationMiddleWare,
     createapplicationMiddleWare,
     createAcademyMiddleWare,
@@ -37,26 +47,34 @@ const {
     verifyAdminToken
 } = require("./Authorization/verification")
 
-router.post("/admin/login",loginMiddleWare,adminLogin) //working
-router.post("/signup",signupMiddleWare,signup); //working
-router.post("/login", loginMiddleWare,loginController) //working
-router.post("/application",verifyToken,applicationMiddleWare,applicationController) //working
+router.post("/admin/login",loginMiddleWare,adminLogin) 
+router.post("/signup",signupMiddleWare,signup); 
+router.post("/login", loginMiddleWare,loginController) 
+router.post("/application",verifyToken,applicationMiddleWare,applicationController) 
 router.post("/createApplication",verifyAdminToken,createapplicationMiddleWare,adminCreateApplication)
 router.post("/assessment",verifyAdminToken,Assessments)
 router.post("/userAns",verifyToken,userAnswer) 
 router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
+router.post("/assessmentHistory",verifyAdminToken,assessmentHistory)
+router.put("/password_change", verifyToken,forgetpasswordMiddleWare, passwordChangeController)
 router.put("/status_change", verifyAdminToken,statusChangeMiddleWare,changeApplicationController)
-router.get("/application", verifyToken, getUserApplicationController) //working
-router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultDESCController) // remove later
-router.get("/applicants_asc/all", verifyAdminToken, getAllApplicantsResultASCController) //remove later
-router.get("/specific_batch/:batch_id", verifyAdminToken, getSpecificBatchController) //working
-router.get("/getTotal", getTotal)
+router.put("/update_question2/:batch_id", verifyAdminToken, changequestionController2)
+router.get("/application", verifyToken, getUserApplicationController) 
+router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultDESCController) 
+router.get("/applicants_asc/all", verifyAdminToken, getAllApplicantsResultASCController) 
+router.get("/specific_batch/:batch_id", verifyAdminToken, getSpecificBatchController)
+router.get("/getTotal", verifyAdminToken,getTotal)
 router.get("/academy", verifyAdminToken,getAllAcademyRecords)
 router.get("/academySoFar", verifyAdminToken,getAcademyNumbers)
-router.get("/score", verifyToken,userScores) // change to post wen user submit 
-router.put("/update_question/:id", verifyAdminToken, changequestionController)
+router.get("/details", verifyToken,getDetails) 
+// router.put("/update_question/:batch_id", verifyAdminToken, changequestionController)
 router.get("/getQuestion", verifyToken,getQues)
-router.get("/getUpdate", getUpdatedApplication) //working
+router.get("/getUpdate", getUpdatedApplication)
+router.get("/getHistory",verifyAdminToken,getHistorys)
+router.get("/getCurrentAcademy",verifyAdminToken,getCurrentAcademy) 
+router.get("/getQues/:batch_id",getQuesByparams)
+router.get("/getBatch",getAllBatchs)
+
 
 
 

@@ -13,7 +13,7 @@ const generateUserToken = (id,first_name,last_name,email_address,phone_number,is
     const key = process.env.SECRET_KEY;
     const token = jwt.sign({ id,first_name,last_name,email_address,phone_number,is_admin }, key, 
         { 
-            // expiresIn: '1h' 
+           
     });
     return token;
 }
@@ -31,6 +31,10 @@ const schema = {
         phone_number: joi.number().required()
     }),
     login: joi.object({
+        email_address: joi.string().email().required(),
+        password: joi.string().min(6).required(),
+    }),
+    forgetPassword: joi.object({
         email_address: joi.string().email().required(),
         password: joi.string().min(6).required(),
     }),
