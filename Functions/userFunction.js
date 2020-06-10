@@ -81,6 +81,72 @@ async function checkIfUserDoesNotExistBefore(email_address) {
     }
 }
 
+async function checkIfEmailExists(email_address) {
+    const queryObj = {
+        text: queries.findUserByEmail,
+        values: [email_address],
+    };
+    try {
+        const { rowCount } = await db.query(queryObj);
+        if (rowCount == 0) {
+            return Promise.reject({
+                status: "error",
+                code: 409,
+                message: "User Not found",
+            });
+        }
+        if (rowCount > 0) {
+            return Promise.resolve();
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 404,
+            message: "Error finding user",
+        });
+    }
+}
+async function changeUserPassword( body, id) {
+    const d = new Date();
+    const {email_address,  password } = body
+    const hashedPassword = hashPassword(password);
+    const queryObj = {
+        text: queries.forgetPassword,
+        values: [email_address, hashedPassword, id]
+    }
+    try {
+        const { rows, rowCount } = await db.query(queryObj);
+        const result = rows[0];
+        const data = {
+            result
+        } 
+        
+        if (rowCount > 0) {
+            return Promise.resolve({
+                status: "success",
+                code: 200,
+                message: "User password Updated Successfully",
+                password: data.result.password
+            });
+        }
+        if (rowCount === 0) {
+            console.log(rowCount)
+            return Promise.reject({
+                status: "Error",
+                code: 404,
+                message: "Cannot find User."
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error updating password"
+        })
+    }
+}
 async function checkEmailAndPasswordMatch(body) {
     const { email_address, password } = body;
     const queryObj = {
@@ -308,6 +374,8 @@ async function getUserDetails(id) {
 module.exports = {
     createNewUser,
     checkIfUserDoesNotExistBefore,
+    checkIfEmailExists,
+    changeUserPassword,
     checkEmailAndPasswordMatch,
     applicationForm,
     checkBatch,

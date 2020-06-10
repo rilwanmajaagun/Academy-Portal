@@ -11,6 +11,9 @@ const queries = {
     is_admin
     ) VALUES($1, $2, $3, $4, $5, $6, $7,$8) RETURNING * 
   `,
+  forgetPassword: `
+  UPDATE academy_user SET email_address=($1), password=($2) WHERE id=($3) RETURNING *
+  `,
 
   findUserByEmail: `
     SELECT * FROM academy_user WHERE email_address=($1)
@@ -156,7 +159,7 @@ option_a,
 option_b,
 option_c,
 option_d,
-option_answer FROM question WHERE batch_id=($1)
+option_answer,batch_id FROM question WHERE id=($1) 
 `,
 
  updateQuestion:`

@@ -2,6 +2,8 @@ const express = require("express")
 const {
     checkIfUserDoesNotExistBefore,
     createNewUser,
+    checkIfEmailExists,
+    changeUserPassword,
     checkEmailAndPasswordMatch,
     applicationForm,
     checkBatch,
@@ -31,6 +33,17 @@ async function loginController(req, res) {
     try {
         const result = await checkEmailAndPasswordMatch(req.body);
         return res.status(202).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+async function passwordChangeController(req, res) {
+    
+    const id = res.locals.user.id
+    try {
+        await checkIfEmailExists(req.body.email_address);
+        const result = await changeUserPassword(req.body, id)
+        return res.status(201).json(result);
     } catch (e) {
         return res.status(e.code).json(e);
     }
@@ -77,6 +90,7 @@ async function getDetails(req, res) {
 module.exports = {
     signup,
     loginController,
+    passwordChangeController,
     applicationController,
     getUserApplicationController,
     getDetails
