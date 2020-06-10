@@ -1,7 +1,13 @@
 const moment = require("moment");
 const queries = require("../Query/query");
 const db = require("../database");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv")
 const { hashPassword, comparePassword, generateUserToken } = require("../Authorization/validation")
+
+
+dotenv.config();
 
 async function createNewUser(body) {
     const d = new Date();
@@ -81,13 +87,14 @@ async function checkIfUserDoesNotExistBefore(email_address) {
     }
 }
 
-async function checkIfEmailExists(email_address) {
+async function sendRestLink(body) {
+    const { email_address } = body
     const queryObj = {
         text: queries.findUserByEmail,
         values: [email_address],
     };
     try {
-        const { rowCount } = await db.query(queryObj);
+        const { rowCount, rows} = await db.query(queryObj);
         if (rowCount == 0) {
             return Promise.reject({
                 status: "error",
@@ -96,7 +103,15 @@ async function checkIfEmailExists(email_address) {
             });
         }
         if (rowCount > 0) {
-            return Promise.resolve();
+            const token = jwt.sign({id:rows[0].id, email_address:rows[0].email_address},process.env.SECRET_KEY,{ expiresIn: 15 * 15 })
+            const email = rows[0].email_address
+            return Promise.resolve({
+                status: "success",
+                code: 200,
+                response: "Password reset link has been sent to your Email",
+                token,
+                email
+            });
         }
     } catch (e) {
         console.log(e)
@@ -107,9 +122,10 @@ async function checkIfEmailExists(email_address) {
         });
     }
 }
-async function changeUserPassword( body, id) {
+
+async function changeUserPassword( body, id,email_address) {
     const d = new Date();
-    const {email_address,  password } = body
+    const { password } = body
     const hashedPassword = hashPassword(password);
     const queryObj = {
         text: queries.forgetPassword,
@@ -147,6 +163,7 @@ async function changeUserPassword( body, id) {
         })
     }
 }
+
 async function checkEmailAndPasswordMatch(body) {
     const { email_address, password } = body;
     const queryObj = {
@@ -374,7 +391,7 @@ async function getUserDetails(id) {
 module.exports = {
     createNewUser,
     checkIfUserDoesNotExistBefore,
-    checkIfEmailExists,
+    sendRestLink,
     changeUserPassword,
     checkEmailAndPasswordMatch,
     applicationForm,

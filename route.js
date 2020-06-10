@@ -6,7 +6,8 @@ const {
     passwordChangeController,
     applicationController,
     getUserApplicationController,
-    getDetails
+    getDetails,
+    sendResetLinkControll
 } = require("./Controller/userController");
 const {
     adminCreateApplication,
@@ -56,7 +57,7 @@ router.post("/assessment",verifyAdminToken,Assessments)
 router.post("/userAns",verifyToken,userAnswer) 
 router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
 router.post("/assessmentHistory",verifyAdminToken,assessmentHistory)
-router.put("/password_change", verifyToken,forgetpasswordMiddleWare, passwordChangeController)
+router.put("/password_change", verifyToken,passwordChangeController)
 router.put("/status_change", verifyAdminToken,statusChangeMiddleWare,changeApplicationController)
 router.put("/update_question2/:batch_id", verifyAdminToken, changequestionController2)
 router.get("/application", verifyToken, getUserApplicationController) 
@@ -73,7 +74,7 @@ router.get("/getHistory",verifyAdminToken,getHistorys)
 router.get("/getCurrentAcademy",verifyAdminToken,getCurrentAcademy) 
 router.get("/getQues/:batch_id",getQuesByparams)
 router.get("/getBatch",getAllBatchs)
-
+router.post("/email",sendResetLinkControll)
 
 
 

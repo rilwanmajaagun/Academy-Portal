@@ -2,7 +2,7 @@ const express = require("express")
 const {
     checkIfUserDoesNotExistBefore,
     createNewUser,
-    checkIfEmailExists,
+    sendRestLink,
     changeUserPassword,
     checkEmailAndPasswordMatch,
     applicationForm,
@@ -37,17 +37,31 @@ async function loginController(req, res) {
         return res.status(e.code).json(e);
     }
 }
+
 async function passwordChangeController(req, res) {
-    
+    const email_address =res.locals.user.email_address
     const id = res.locals.user.id
+    console.log(email_address,id)
     try {
-        await checkIfEmailExists(req.body.email_address);
-        const result = await changeUserPassword(req.body, id)
+        const result = await changeUserPassword(req.body,id,email_address)
         return res.status(201).json(result);
     } catch (e) {
         return res.status(e.code).json(e);
     }
 }
+
+async function sendResetLinkControll(req, res) {
+    try {
+        const result = await sendRestLink(req.body);
+         const body = `Follow this link to reset your password. http://localhost:3000/resetpassword/${result.token}/n/n`
+        const subject =  'Enyata Portal - Reset Password'
+        sendMail(result.email, body, subject);
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
 
 async function applicationController(req, res) {
     const body = "Your Application is in Progress and being reviewed. Be sure we would get back to you shortly.Best Regards.Head of Human Resource. Enyata Academy"
@@ -93,6 +107,7 @@ module.exports = {
     passwordChangeController,
     applicationController,
     getUserApplicationController,
-    getDetails
+    getDetails,
+    sendResetLinkControll
 
 }

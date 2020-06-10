@@ -159,7 +159,7 @@ option_a,
 option_b,
 option_c,
 option_d,
-option_answer,batch_id FROM question WHERE id=($1) 
+option_answer FROM question WHERE batch_id=($1)
 `,
 
  updateQuestion:`
