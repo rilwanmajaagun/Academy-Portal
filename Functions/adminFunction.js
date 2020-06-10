@@ -433,7 +433,6 @@ async function getUpdate (){
         });
     }
 }
-
 async function checkIfBatchExistBefore(batch_id) {
     const queryObj = {
       text: queries.checkIfBatchExists,
@@ -485,6 +484,7 @@ async function getAllBatch (){
 
 
   
+
 module.exports = {
     createApplication,
     getSpecificBatch,

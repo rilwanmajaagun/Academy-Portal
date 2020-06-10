@@ -34,6 +34,10 @@ const schema = {
         email_address: joi.string().email().required(),
         password: joi.string().min(6).required(),
     }),
+    forgetPassword: joi.object({
+        email_address: joi.string().email().required(),
+        password: joi.string().min(6).required(),
+    }),
     idparam: {
         id: joi.number().required()
     },

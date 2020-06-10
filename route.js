@@ -3,9 +3,11 @@ const router = express.Router();
 const {
     signup, 
     loginController,
+    passwordChangeController,
     applicationController,
     getUserApplicationController,
-    getDetails
+    getDetails,
+    sendResetLinkControll
 } = require("./Controller/userController");
 const {
     adminCreateApplication,
@@ -35,6 +37,7 @@ const {
 const {
     signupMiddleWare, 
     loginMiddleWare,
+    forgetpasswordMiddleWare,
     applicationMiddleWare,
     createapplicationMiddleWare,
     createAcademyMiddleWare,
@@ -54,6 +57,8 @@ router.post("/assessment",verifyAdminToken,Assessments)
 router.post("/userAns",verifyToken,userAnswer) 
 router.post("/academy",verifyAdminToken,createAcademyMiddleWare,createAcademy)
 router.post("/assessmentHistory",verifyAdminToken,assessmentHistory)
+router.post("/email",sendResetLinkControll)
+router.put("/password_change", verifyToken,passwordChangeController)
 router.put("/status_change", verifyAdminToken,statusChangeMiddleWare,changeApplicationController)
 router.put("/update_question2/:batch_id", verifyAdminToken, changequestionController2)
 router.get("/application", verifyToken, getUserApplicationController) 

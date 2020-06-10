@@ -1,7 +1,13 @@
 const moment = require("moment");
 const queries = require("../Query/query");
 const db = require("../database");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv")
 const { hashPassword, comparePassword, generateUserToken } = require("../Authorization/validation")
+
+
+dotenv.config();
 
 async function createNewUser(body) {
     const d = new Date();
@@ -78,6 +84,84 @@ async function checkIfUserDoesNotExistBefore(email_address) {
             code: 404,
             message: "Error finding user",
         });
+    }
+}
+
+async function sendRestLink(body) {
+    const { email_address } = body
+    const queryObj = {
+        text: queries.findUserByEmail,
+        values: [email_address],
+    };
+    try {
+        const { rowCount, rows} = await db.query(queryObj);
+        if (rowCount == 0) {
+            return Promise.reject({
+                status: "error",
+                code: 409,
+                message: "User Not found",
+            });
+        }
+        if (rowCount > 0) {
+            const token = jwt.sign({id:rows[0].id, email_address:rows[0].email_address},process.env.SECRET_KEY,{ expiresIn: 15 * 15 })
+            const email = rows[0].email_address
+            return Promise.resolve({
+                status: "success",
+                code: 200,
+                message:"Reset Password link sent successfully",
+                response: "Password reset link has been sent to your Email",
+                token,
+                email
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 404,
+            message: "Error finding user",
+        });
+    }
+}
+
+async function changeUserPassword( body, id,email_address) {
+    const d = new Date();
+    const { password } = body
+    const hashedPassword = hashPassword(password);
+    const queryObj = {
+        text: queries.forgetPassword,
+        values: [email_address, hashedPassword, id]
+    }
+    try {
+        const { rows, rowCount } = await db.query(queryObj);
+        const result = rows[0];
+        const data = {
+            result
+        } 
+        
+        if (rowCount > 0) {
+            return Promise.resolve({
+                status: "success",
+                code: 200,
+                message: "User password Updated Successfully",
+                password: data.result.password
+            });
+        }
+        if (rowCount === 0) {
+            console.log(rowCount)
+            return Promise.reject({
+                status: "Error",
+                code: 404,
+                message: "Cannot find User."
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error updating password"
+        })
     }
 }
 
@@ -308,6 +392,8 @@ async function getUserDetails(id) {
 module.exports = {
     createNewUser,
     checkIfUserDoesNotExistBefore,
+    sendRestLink,
+    changeUserPassword,
     checkEmailAndPasswordMatch,
     applicationForm,
     checkBatch,

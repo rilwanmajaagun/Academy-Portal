@@ -2,6 +2,8 @@ const express = require("express")
 const {
     checkIfUserDoesNotExistBefore,
     createNewUser,
+    sendRestLink,
+    changeUserPassword,
     checkEmailAndPasswordMatch,
     applicationForm,
     checkBatch,
@@ -31,6 +33,29 @@ async function loginController(req, res) {
     try {
         const result = await checkEmailAndPasswordMatch(req.body);
         return res.status(202).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function passwordChangeController(req, res) {
+    const email_address =res.locals.user.email_address
+    const id = res.locals.user.id
+    try {
+        const result = await changeUserPassword(req.body,id,email_address)
+        return res.status(201).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function sendResetLinkControll(req, res) {
+    try {
+        const result = await sendRestLink(req.body);
+         const body = `Follow this link to reset your password. http://localhost:3000/resetpassword/${result.token}/n/n`
+        const subject =  'Enyata Portal - Reset Password'
+        sendMail(result.email, body, subject);
+        return res.status(201).json(result);
     } catch (e) {
         return res.status(e.code).json(e);
     }
@@ -77,8 +102,10 @@ async function getDetails(req, res) {
 module.exports = {
     signup,
     loginController,
+    passwordChangeController,
     applicationController,
     getUserApplicationController,
-    getDetails
+    getDetails,
+    sendResetLinkControll
 
 }
