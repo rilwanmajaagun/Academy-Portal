@@ -142,6 +142,7 @@ async function updatequestion2 (body,batch_id){
           update++;
         }
       } catch (e) {
+          console.log(e)
         if (update < 1) {
           return Promise.reject({
             status: "error",
