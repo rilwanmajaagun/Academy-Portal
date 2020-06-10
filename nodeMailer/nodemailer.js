@@ -57,6 +57,7 @@ async function  sendMail (email, body, subject){
       });
       
 } 
+
 module.exports = {
     sendMail,
     getEmails

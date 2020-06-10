@@ -15,7 +15,7 @@ async function createApplication (body){
         batch_id,
         instruction,
     } = body;
-    const link = ` ${link_url}?${batch_id}&${closure_date}`
+    const link = ` ${link_url}/enyata?id=${batch_id}=${closure_date}`
     const queryObj = {
         text: queries.createApplication,
         values: [
@@ -29,11 +29,12 @@ async function createApplication (body){
         ]
     }
     try{
+
         const { rowCount} = await db.query(queryObj);
         if ( rowCount == 0 ){
             return Promise.reject({
                 status: "error",
-                code: 500,
+                code: 400,
                 message: "colud not create application"
             });
         }
@@ -54,11 +55,12 @@ async function createApplication (body){
 
     }
 }
-// this is in descending order
+
 async function getAllApplicantsResultDESC() {
     const queryObj = {
         text: queries.getAllapplicantResultDESC
     };
+    
     try {
         const { rows } = await db.query(queryObj);
         return Promise.resolve({
@@ -75,7 +77,7 @@ async function getAllApplicantsResultDESC() {
         });
     }
 }
-// this is in ascending order
+
 async function getAllApplicantsResultASC() {
     const queryObj = {
         text: queries.getAllapplicantResultASC,
@@ -324,6 +326,7 @@ async function getAcademySofar() {
            rows  
         });
     } catch (e) {
+        console.log(e)
         return Promise.reject({
             status: "error",
             code: 500,
@@ -374,7 +377,114 @@ async function getCurrentBatch() {
     }
 }
 
+async function changeApplicationStatus( body) {
+    const d = new Date();
+    const { application_status, id } = body
+    const queryObj = {
+        text: queries.updateStatus,
+        values: [application_status, id]
+    }
+    try {
+        const { rows, rowCount } = await db.query(queryObj);
+        const result = rows[0];
+        const data = {
+            result
+        } 
+        if (rowCount === 0) {
+            return Promise.reject({
+                status: "Error",
+                code: 404,
+                message: "Cannot find applicant Id."
+            });
+        }
+        if (rowCount > 0) {
+            return Promise.resolve({
+                status: "success",
+                code: 200,
+                message: "Applicant status updated successfully",
+                user_id: data.result.user_id
+            });
+        }
+    } catch (e) {
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error updating applicant status"
+        })
+    }
+}
 
+async function getUpdate (){
+    const queryObj = {
+        text: queries.getUpdate
+    };
+    try{
+        const { rows } = await db.query(queryObj)
+        return Promise.resolve(
+        rows[0]
+        )
+    }catch(e){
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting Batch_id",
+        });
+    }
+}
+
+async function checkIfBatchExistBefore(batch_id) {
+    const queryObj = {
+      text: queries.checkIfBatchExists,
+      values: [batch_id]
+    };
+  
+    try {
+      const { rowCount } = await db.query(queryObj);
+      if (rowCount == 0) {
+        return Promise.resolve();
+      }
+      if (rowCount > 0) {
+        return Promise.reject({
+          status: "erorr",
+          code: 409,
+          message: "Batch Already Exists",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      return Promise.reject({
+        status: "error",
+        code: 500,
+        message: "Error finding batch",
+      });
+    }
+}
+
+async function getAllBatch (){
+    const queryObj = {
+        text: queries.allBatch
+    }
+    try{
+        const{ rows } = await db.query(queryObj)
+        return Promise.resolve({
+            status: "success",
+            code: 200,
+            message: "Success fetching all batch",
+            rows
+        })
+    }catch(e){
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error finding batch",
+        })
+    }
+}
+
+
+  
 module.exports = {
     createApplication,
     getSpecificBatch,
@@ -387,5 +497,10 @@ module.exports = {
     getAllAcademyRecord,
     getAcademySofar,
     checkAcademyBatch,
-    getCurrentBatch
+    getCurrentBatch,
+    changeApplicationStatus,
+    getUpdate,
+    checkIfBatchExistBefore,
+    getAllBatch
+  
 }

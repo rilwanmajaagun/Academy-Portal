@@ -11,12 +11,22 @@ getAllAcademyRecord,
 getAcademySofar,
 checkAcademyBatch,
 getCurrentBatch,
-getSpecificBatch
-} = require("../Functions/adminFunction")
+getSpecificBatch,
+changeApplicationStatus,
+getUpdate,
+checkIfBatchExistBefore,
+getAllBatch
 
+} = require("../Functions/adminFunction")
+const {
+    getEmails,
+    sendMail
+} = require("../nodeMailer/nodemailer")
 
 async function adminCreateApplication (req, res) {
+    const {batch_id} = req.body 
     try {
+        await checkIfBatchExistBefore(batch_id)
         const result = await createApplication(req.body)
         return res.status(201).json(result);
     } catch (e) {
@@ -32,6 +42,7 @@ async function getAllApplicantsResultDESCController (req, res) {
         return res.status(e.code).json(e);
     }
 }
+
 async function getAllApplicantsResultASCController (req, res) {
     try {
         const result = await getAllApplicantsResultASC();
@@ -52,9 +63,9 @@ async function adminLogin (req, res) {
 }
 
 async function getSpecificBatchController (req, res) {
-    const {batch_id} = req.body
+    const {batch_id} = req.params
     try {
-        const result = await getSpecificBatch(batch_id, req.body);
+        const result = await getSpecificBatch(batch_id);
         return res.status(202).json(result);
     } catch (e) {
         return res.status(e.code).json(e);
@@ -69,6 +80,14 @@ async function getTotal (req, res) {
         } catch (e) {
             return res.status(e.code).json(e);
         }
+}
+async function getCurrentAcademy (req, res) {
+    try {
+        const result = await getCurrentBatch()
+        return res.status(200).json(result.current);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
 }
 
 async function createAcademy (req, res) {
@@ -99,6 +118,39 @@ async function getAcademyNumbers (req, res) {
     }
 }
 
+async function changeApplicationController (req, res)  {
+    const body = "your"
+    const subject = "Application status changed"    
+     try {   
+         const result = await changeApplicationStatus( req.body);
+         const email = await getEmails(result.user_id);
+         await sendMail(email, body, subject)
+         return res.status(200).json(result)
+     } catch (e) {
+         return res.status(e.code).json(e)
+     }
+}
+
+async function getUpdatedApplication (req, res) {
+    try {
+        const result = await getUpdate();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+async function getAllBatchs (req, res) {
+    try {
+        const result = await getAllBatch();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
+
+
+
 module.exports = {
     adminCreateApplication,
     getAllApplicantsResultDESCController,
@@ -108,5 +160,10 @@ module.exports = {
     createAcademy,
     getAllAcademyRecords,
     getAcademyNumbers,
-    getSpecificBatchController
+    getSpecificBatchController,
+    changeApplicationController,
+    getUpdatedApplication,
+    getCurrentAcademy,
+    getAllBatchs
+   
 }
