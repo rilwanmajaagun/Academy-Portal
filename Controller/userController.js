@@ -41,7 +41,6 @@ async function loginController(req, res) {
 async function passwordChangeController(req, res) {
     const email_address =res.locals.user.email_address
     const id = res.locals.user.id
-    console.log(email_address,id)
     try {
         const result = await changeUserPassword(req.body,id,email_address)
         return res.status(201).json(result);
@@ -61,7 +60,6 @@ async function sendResetLinkControll(req, res) {
         return res.status(e.code).json(e);
     }
 }
-
 
 async function applicationController(req, res) {
     const body = "Your Application is in Progress and being reviewed. Be sure we would get back to you shortly.Best Regards.Head of Human Resource. Enyata Academy"

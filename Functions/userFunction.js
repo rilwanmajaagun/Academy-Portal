@@ -108,6 +108,7 @@ async function sendRestLink(body) {
             return Promise.resolve({
                 status: "success",
                 code: 200,
+                message:"Reset Password link sent successfully",
                 response: "Password reset link has been sent to your Email",
                 token,
                 email
