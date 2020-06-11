@@ -512,7 +512,33 @@ async function updateTime (body,batch_id){
         })
     }
 }
-  
+
+async function getAssessmentTime (batch_id){
+    const queryObj={
+        text: queries.getAssessmentTime,
+        values:[batch_id]
+    }
+    try{
+        const { rows } = await db.query(queryObj)
+        if(rows){
+            return Promise.resolve({
+                status:"success",
+                code:"200",
+                meessage:'Time Allocated gotten successfully',
+                time: rows[0].time_allocated
+            })
+        }
+    }catch(e){
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error checking table",
+        });
+    }
+
+}
+
 
 module.exports = {
     createApplication,
@@ -531,7 +557,8 @@ module.exports = {
     getUpdate,
     checkIfBatchExistBefore,
     getAllBatch,
-    updateTime
+    updateTime,
+    getAssessmentTime
 
   
 }

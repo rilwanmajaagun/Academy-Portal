@@ -16,7 +16,8 @@ changeApplicationStatus,
 getUpdate,
 checkIfBatchExistBefore,
 getAllBatch,
-updateTime
+updateTime,
+getAssessmentTime
 
 } = require("../Functions/adminFunction")
 const {
@@ -161,6 +162,15 @@ async function updateTimeController (req,res) {
     }
 }
 
+async function getAssessmentTimeController (req, res) {
+    const{batch_id} = req.params
+    try {
+        const result = await getAssessmentTime(batch_id);
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
 
 
 module.exports = {
@@ -177,6 +187,7 @@ module.exports = {
     getUpdatedApplication,
     getCurrentAcademy,
     getAllBatchs,
-    updateTimeController
+    updateTimeController,
+    getAssessmentTimeController
    
 }

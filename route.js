@@ -23,7 +23,8 @@ const {
     getUpdatedApplication,
     getCurrentAcademy,
     getAllBatchs,
-    updateTimeController
+    updateTimeController,
+    getAssessmentTimeController
 } = require("./Controller/adminController")
 const {
     userAnswer, 
@@ -76,6 +77,7 @@ router.get("/getHistory",verifyAdminToken,getHistorys)
 router.get("/getCurrentAcademy",verifyAdminToken,getCurrentAcademy) 
 router.get("/getQues/:batch_id",getQuesByparams)
 router.get("/getBatch",getAllBatchs)
+router.get("/getTime/:batch_id",verifyAdminToken,getAssessmentTimeController)
 
 
 
