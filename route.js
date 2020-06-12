@@ -34,6 +34,7 @@ const {
     getHistorys,
     getQuesByparams,
     changequestionController2, 
+    changequestionController
 } = require("./Controller/questionController")
 const {
     signupMiddleWare, 
@@ -63,6 +64,7 @@ router.put("/password_change", verifyToken,passwordChangeController)
 router.put("/status_change", verifyAdminToken,statusChangeMiddleWare,changeApplicationController)
 router.put("/updateTime/:batch_id",verifyAdminToken,updateTimeController)
 router.put("/update_question2/:batch_id", verifyAdminToken, changequestionController2)
+router.put("/update_question/:batch_id",changequestionController)
 router.get("/application", verifyToken, getUserApplicationController) 
 router.get("/applicants/all", verifyAdminToken, getAllApplicantsResultDESCController) 
 router.get("/applicants_asc/all", verifyAdminToken, getAllApplicantsResultASCController) 

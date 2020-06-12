@@ -12,7 +12,8 @@ assessment_details,
 checkAssessmentDeatils,
 getHistory,
 updateAssessmentStatus,
-updatequestion2
+updatequestion2,
+updateQuestion
 } = require("../Functions/questionFunction")
 
 
@@ -92,6 +93,15 @@ async function changequestionController2 (req, res)  {
     }
 }
 
+async function changequestionController (req, res)  {
+    const { batch_id } = req.params
+    try {   
+        const result = await updateQuestion(req.body,batch_id);
+        return res.status(200).json(result)
+    } catch (e) {
+        return res.status(e.code).json(e)
+    }
+}
 
 
 
@@ -102,5 +112,6 @@ module.exports = {
     assessmentHistory,
     getHistorys,
     getQuesByparams,
-    changequestionController2
+    changequestionController2,
+    changequestionController
 }

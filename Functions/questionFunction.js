@@ -201,6 +201,39 @@ async function updatequestion2 (body,batch_id){
     // }
 }
  
+async function updateQuestion (body,batch_id){
+    const {file_url,question,option_a,option_b,option_c,option_d,option_answer,id} = body
+    const queryObj = {
+        text: queries.updateQuestion,
+        values:[file_url, question,option_a,option_b,option_c,option_d,option_answer,batch_id,id]
+    }
+    try{
+        const { rowCount } = await db.query(queryObj)
+        if (rowCount==0){
+            return Promise.reject({
+                status:"Error",
+                code:400,
+                message:"Error Updating question"
+            })
+        }
+        if (rowCount>0){
+            return Promise.resolve({
+                status:"Success",
+                code:200,
+                message:"Question Updated successfully"
+            })
+        }
+    }catch(e){
+        console.log(e)
+        return Promise.reject({
+            status: "error",
+            code: 500,
+            message: "Error getting Batch",
+        });
+    }
+
+}
+
 function shuffle (array) {
     return array.sort(() => Math.random() - 0.5);
 }
@@ -445,6 +478,9 @@ async function updateAssessmentStatus(batch_id){
 
 
 
+
+
+
 module.exports = {
     createUserAnswer,
     getUserScore,
@@ -458,5 +494,6 @@ module.exports = {
     checkAssessmentDeatils,
     getHistory,
     updateAssessmentStatus,
-    updatequestion2
+    updatequestion2,
+    updateQuestion
 }
