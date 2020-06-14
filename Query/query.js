@@ -223,7 +223,13 @@ SELECT * FROM assessment_details ORDER BY batch_id ASC
 `,
 updateAssessmenTStatus:`
 UPDATE assessment_details SET status=($1) WHERE batch_id=($2)
-`
+`,
+updateAssessmenTime:`
+UPDATE assessment_details SET time_allocated=($1) WHERE batch_id=($2)
+`,
+getAssessmentTime:`
+SELECT time_allocated FROM assessment_details WHERE batch_id=($1)
+`,
 };
 
 

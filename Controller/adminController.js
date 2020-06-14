@@ -15,7 +15,9 @@ getSpecificBatch,
 changeApplicationStatus,
 getUpdate,
 checkIfBatchExistBefore,
-getAllBatch
+getAllBatch,
+updateTime,
+getAssessmentTime
 
 } = require("../Functions/adminFunction")
 const {
@@ -149,6 +151,26 @@ async function getAllBatchs (req, res) {
     }
 }
 
+async function updateTimeController (req,res) {
+ const { batch_id } = req.params
+    try{
+        const result = await updateTime(req.body,batch_id)
+        return res.status(200).json(result)
+    }
+    catch(e){
+        return res.status(e.code).json(e);
+    }
+}
+
+async function getAssessmentTimeController (req, res) {
+    const{batch_id} = req.params
+    try {
+        const result = await getAssessmentTime(batch_id);
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(e.code).json(e);
+    }
+}
 
 
 module.exports = {
@@ -164,6 +186,8 @@ module.exports = {
     changeApplicationController,
     getUpdatedApplication,
     getCurrentAcademy,
-    getAllBatchs
+    getAllBatchs,
+    updateTimeController,
+    getAssessmentTimeController
    
 }

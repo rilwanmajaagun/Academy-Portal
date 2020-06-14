@@ -52,7 +52,7 @@ async function passwordChangeController(req, res) {
 async function sendResetLinkControll(req, res) {
     try {
         const result = await sendRestLink(req.body);
-         const body = `Follow this link to reset your password. http://localhost:3000/resetpassword/${result.token}/n/n`
+         const body = `Follow this link to reset your password. http://localhost:3000/resetpassword/enyata?reset=${result.token}`
         const subject =  'Enyata Portal - Reset Password'
         sendMail(result.email, body, subject);
         return res.status(201).json(result);
