@@ -9,6 +9,16 @@ const pool = new Pool({
     connectionString: connectionString
 });
 
+// pool.connect(function (err) {
+// 	if (err) {
+// 		console.error("Error connecting: ");
+// 		return;
+// 	}
+
+// 	console.log("Connected as id ");
+// });
+
+
 
 pool.on("connect", () => {
     console.log("connected to db successfully");
