@@ -416,7 +416,11 @@ async function getUpdate() {
 	};
 	try {
 		const { rows } = await db.query(queryObj);
-		return Promise.resolve(rows[0]);
+		const result = rows[0];
+		const data = {
+			result,
+		};
+		return Promise.resolve(data.result.file_url);
 	} catch (e) {
 		console.log(e);
 		return Promise.reject({
