@@ -3,400 +3,431 @@ const queries = require("../Query/query");
 const db = require("../database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv")
-const { hashPassword, comparePassword, generateUserToken } = require("../Authorization/validation")
-
+const dotenv = require("dotenv");
+const {
+	hashPassword,
+	comparePassword,
+	generateUserToken,
+} = require("../Authorization/validation");
 
 dotenv.config();
 
 async function createNewUser(body) {
-    const d = new Date();
-    const created_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
-    const { first_name, last_name, email_address, phone_number, password, password_confirmation } = body;
-    const is_admin = false;
-    const hashedPassword = hashPassword(password);
-    const queryObj = {
-        text: queries.applicantSignUp,
-        values: [first_name, last_name, email_address, phone_number, hashedPassword, created_at, created_at, is_admin]
-    }
+	const d = new Date();
+	const created_at = moment(d).format("YYYY-MM-DD HH:mm:ss");
+	const {
+		first_name,
+		last_name,
+		email_address,
+		phone_number,
+		password,
+		password_confirmation,
+	} = body;
+	const is_admin = false;
+	const hashedPassword = hashPassword(password);
+	const queryObj = {
+		text: queries.applicantSignUp,
+		values: [
+			first_name,
+			last_name,
+			email_address,
+			phone_number,
+			hashedPassword,
+			created_at,
+			created_at,
+			is_admin,
+		],
+	};
 
-    try {
-
-        const { rowCount, rows } = await db.query(queryObj);
-        const response = rows[0];
-        const tokens = generateUserToken(
-            response.id,
-            response.first_name,
-            response.last_name,
-            response.email_address,
-            response.phone_number,
-            response.is_admin
-        );
-        const data = {
-            token: tokens,
-            response
-        }
-        if (rowCount == 0) {
-            return Promise.reject({
-                status: "error",
-                code: 400,
-                message: "Could not create user",
-            });
-        }
-        if (rowCount > 0) {
-            return Promise.resolve({
-                message: "User created successfully",
-                first_name: data.response.first_name,
-                last_name: data.response.last_name,
-                token: data.token
-
-            });
-        }
-    } catch (e) {
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error creating user",
-        });
-    }
+	try {
+		const { rowCount, rows } = await db.query(queryObj);
+		const response = rows[0];
+		const tokens = generateUserToken(
+			response.id,
+			response.first_name,
+			response.last_name,
+			response.email_address,
+			response.phone_number,
+			response.is_admin
+		);
+		const data = {
+			token: tokens,
+			response,
+		};
+		if (rowCount == 0) {
+			return Promise.reject({
+				status: "error",
+				code: 400,
+				message: "Could not create user",
+			});
+		}
+		if (rowCount > 0) {
+			return Promise.resolve({
+				message: "User created successfully",
+				first_name: data.response.first_name,
+				last_name: data.response.last_name,
+				token: data.token,
+			});
+		}
+	} catch (e) {
+		return Promise.reject({
+			status: "error",
+			code: 500,
+			message: "Error creating user",
+		});
+	}
 }
 
 async function checkIfUserDoesNotExistBefore(email_address) {
-    const queryObj = {
-        text: queries.findUserByEmail,
-        values: [email_address],
-    };
-    try {
-        const { rowCount } = await db.query(queryObj);
-        if (rowCount == 0) {
-            return Promise.resolve();
-        }
-        if (rowCount > 0) {
-            return Promise.reject({
-                status: "error",
-                code: 409,
-                message: "User Already Exists",
-            });
-        }
-    } catch (e) {
-        return Promise.reject({
-            status: "error",
-            code: 404,
-            message: "Error finding user",
-        });
-    }
+	const queryObj = {
+		text: queries.findUserByEmail,
+		values: [email_address],
+	};
+	try {
+		const { rowCount } = await db.query(queryObj);
+		if (rowCount == 0) {
+			return Promise.resolve();
+		}
+		if (rowCount > 0) {
+			return Promise.reject({
+				status: "error",
+				code: 409,
+				message: "User Already Exists",
+			});
+		}
+	} catch (e) {
+		return Promise.reject({
+			status: "error",
+			code: 404,
+			message: "Error finding user",
+		});
+	}
 }
 
 async function sendRestLink(body) {
-    const { email_address } = body
-    const queryObj = {
-        text: queries.findUserByEmail,
-        values: [email_address],
-    };
-    try {
-        const { rowCount, rows} = await db.query(queryObj);
-        if (rowCount == 0) {
-            return Promise.reject({
-                status: "error",
-                code: 409,
-                message: "User Not found",
-            });
-        }
-        if (rowCount > 0) {
-            const token = jwt.sign({id:rows[0].id, email_address:rows[0].email_address},process.env.SECRET_KEY,{ expiresIn: 15 * 15 })
-            const email = rows[0].email_address
-            return Promise.resolve({
-                status: "success",
-                code: 200,
-                message:"Reset Password link sent successfully",
-                response: "Password reset link has been sent to your Email",
-                token,
-                email
-            });
-        }
-    } catch (e) {
-        console.log(e)
-        return Promise.reject({
-            status: "error",
-            code: 404,
-            message: "Error finding user",
-        });
-    }
+	const { email_address } = body;
+	const queryObj = {
+		text: queries.findUserByEmail,
+		values: [email_address],
+	};
+	try {
+		const { rowCount, rows } = await db.query(queryObj);
+		if (rowCount == 0) {
+			return Promise.reject({
+				status: "error",
+				code: 409,
+				message: "User Not found",
+			});
+		}
+		if (rowCount > 0) {
+			const token = jwt.sign(
+				{
+					id: rows[0].id,
+					email_address:
+						rows[0]
+							.email_address,
+				},
+				process.env.SECRET_KEY,
+				{ expiresIn: 15 * 15 }
+			);
+			const email = rows[0].email_address;
+			return Promise.resolve({
+				status: "success",
+				code: 200,
+				message:
+					"Reset Password link sent successfully",
+				response:
+					"Password reset link has been sent to your Email",
+				token,
+				email,
+			});
+		}
+	} catch (e) {
+		console.log(e);
+		return Promise.reject({
+			status: "error",
+			code: 404,
+			message: "Error finding user",
+		});
+	}
 }
 
-async function changeUserPassword( body, id,email_address) {
-    const d = new Date();
-    const { password } = body
-    const hashedPassword = hashPassword(password);
-    const queryObj = {
-        text: queries.forgetPassword,
-        values: [email_address, hashedPassword, id]
-    }
-    try {
-        const { rows, rowCount } = await db.query(queryObj);
-        const result = rows[0];
-        const data = {
-            result
-        } 
-        
-        if (rowCount > 0) {
-            return Promise.resolve({
-                status: "success",
-                code: 200,
-                message: "User password Updated Successfully",
-                password: data.result.password
-            });
-        }
-        if (rowCount === 0) {
-            console.log(rowCount)
-            return Promise.reject({
-                status: "Error",
-                code: 404,
-                message: "Cannot find User."
-            });
-        }
-    } catch (e) {
-        console.log(e)
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error updating password"
-        })
-    }
+async function changeUserPassword(body, id, email_address) {
+	const d = new Date();
+	const { password } = body;
+	const hashedPassword = hashPassword(password);
+	const queryObj = {
+		text: queries.forgetPassword,
+		values: [email_address, hashedPassword, id],
+	};
+	try {
+		const { rows, rowCount } = await db.query(queryObj);
+		const result = rows[0];
+		const data = {
+			result,
+		};
+
+		if (rowCount > 0) {
+			return Promise.resolve({
+				status: "success",
+				code: 200,
+				message:
+					"User password Updated Successfully",
+				password: data.result.password,
+			});
+		}
+		if (rowCount === 0) {
+			console.log(rowCount);
+			return Promise.reject({
+				status: "Error",
+				code: 404,
+				message: "Cannot find User.",
+			});
+		}
+	} catch (e) {
+		console.log(e);
+		return Promise.reject({
+			status: "error",
+			code: 500,
+			message: "Error updating password",
+		});
+	}
 }
 
 async function checkEmailAndPasswordMatch(body) {
-    const { email_address, password } = body;
-    const queryObj = {
-        text: queries.findUserByEmail,
-        values: [email_address],
-    };
+	const { email_address, password } = body;
+	const queryObj = {
+		text: queries.findUserByEmail,
+		values: [email_address],
+	};
 
-    try {
-        const { rows, rowCount } = await db.query(queryObj);
-        if (rowCount == 0) {
-            return Promise.reject({
-                status: "error",
-                code: 404,
-                message: "Email not found",
-            });
-        }
+	try {
+		const { rows, rowCount } = await db.query(queryObj);
+		if (rowCount == 0) {
+			return Promise.reject({
+				status: "error",
+				code: 404,
+				message: "Email not found",
+			});
+		}
 
-        if (rowCount > 0) {
-            const result = rows[0];
-            if (!comparePassword(result.password, password)) {
-                return Promise.reject({
-                    status: "error",
-                    code: 400,
-                    message: "Password is incorrect",
-                });
-            }
-            const tokens = generateUserToken(result.id,
-                result.first_name,
-                result.last_name,
-                result.email_address,
-                result.phone_number,
-                result.is_admin
-            );
-            const data = {
-                token: tokens,
-                result
-            }
-            return Promise.resolve({
-                message: "Log in successful. Welcome!",
-                first_name: data.result.first_name,
-                last_name: data.result.last_name,
-                token: data.token
-
-
-            })
-        }
-
-    } catch (e) {
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error finding user",
-        });
-    }
+		if (rowCount > 0) {
+			const result = rows[0];
+			if (!comparePassword(result.password, password)) {
+				return Promise.reject({
+					status: "error",
+					code: 400,
+					message:
+						"Password is incorrect",
+				});
+			}
+			const tokens = generateUserToken(
+				result.id,
+				result.first_name,
+				result.last_name,
+				result.email_address,
+				result.phone_number,
+				result.is_admin
+			);
+			const data = {
+				token: tokens,
+				result,
+			};
+			return Promise.resolve({
+				message: "Log in successful. Welcome!",
+				first_name: data.result.first_name,
+				last_name: data.result.last_name,
+				token: data.token,
+			});
+		}
+	} catch (e) {
+		return Promise.reject({
+			status: "error",
+			code: 500,
+			message: "Error finding user",
+		});
+	}
 }
 
 async function applicationForm(user_id, body) {
-    const d = new Date();
-    const currentYear = moment(d).format("YYYY");
-    const application_status = "pending";
-    const score = 0;
-    const {
-        cv_url,
-        first_name,
-        last_name,
-        email,
-        date_of_birth,
-        address, university,
-        course_of_study,
-        cgpa, batch_id,
-        closure_date,
-        created_at,
-    } = body;
-    const birthYear = date_of_birth.slice(0, 4)
-    const age = currentYear - birthYear
-    const queryObj = {
-        text: queries.applicantForm,
-        values: [
-            user_id,
-            cv_url,
-            first_name,
-            last_name,
-            email,
-            date_of_birth,
-            age,
-            address,
-            university,
-            course_of_study,
-            cgpa,
-            batch_id,
-            closure_date,
-            score,
-            created_at,
-            application_status
-        ]
-    }
-    try {
-
-        const { rowCount, rows } = await db.query(queryObj);
-        if (rowCount == 0) {
-            return Promise.reject({
-                status: "error",
-                code: 400,
-                message: "colud not create application"
-            });
-        }
-        if (rowCount > 0) {
-            return Promise.resolve({
-                status: "success",
-                code: 201,
-                message: "Application sent"
-            })
-        };
-    } catch (e) {
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error SubmittingApplication Form"
-        })
-
-    }
+	const d = new Date();
+	const currentYear = moment(d).format("YYYY");
+	const application_status = "pending";
+	const score = 0;
+	const {
+		cv_url,
+		first_name,
+		last_name,
+		email,
+		date_of_birth,
+		address,
+		university,
+		course_of_study,
+		cgpa,
+		batch_id,
+		closure_date,
+		created_at,
+	} = body;
+	const birthYear = date_of_birth.slice(0, 4);
+	const age = currentYear - birthYear;
+	const queryObj = {
+		text: queries.applicantForm,
+		values: [
+			user_id,
+			cv_url,
+			first_name,
+			last_name,
+			email,
+			date_of_birth,
+			age,
+			address,
+			university,
+			course_of_study,
+			cgpa,
+			batch_id,
+			closure_date,
+			score,
+			created_at,
+			application_status,
+		],
+	};
+	try {
+		const { rowCount, rows } = await db.query(queryObj);
+		if (rowCount == 0) {
+			return Promise.reject({
+				status: "error",
+				code: 400,
+				message: "colud not create application",
+			});
+		}
+		if (rowCount > 0) {
+			return Promise.resolve({
+				status: "success",
+				code: 201,
+				message: "Application sent",
+			});
+		}
+	} catch (e) {
+		return Promise.reject({
+			status: "error",
+			code: 500,
+			message: "Error SubmittingApplication Form",
+		});
+	}
 }
 
 async function checkBatch(user_id, body) {
-    const { batch_id } = body
-    const queryObj = {
-        text: queries.getBatch,
-        values: [user_id, batch_id],
-    };
-    try {
-        const { rowCount } = await db.query(queryObj);
-        if (rowCount == 0) {
-            return Promise.resolve();
-        }
-        if (rowCount > 0) {
-            return Promise.reject({
-                status: "error",
-                code: 409,
-                message: "Application has been submitted",
-            });
-        }
-    } catch (e) {
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error finding Batch_id",
-        });
-    }
+	const { batch_id } = body;
+	const queryObj = {
+		text: queries.getBatch,
+		values: [user_id, batch_id],
+	};
+	try {
+		const { rowCount } = await db.query(queryObj);
+		if (rowCount == 0) {
+			return Promise.resolve();
+		}
+		if (rowCount > 0) {
+			return Promise.reject({
+				status: "error",
+				code: 409,
+				message:
+					"Application has been submitted",
+			});
+		}
+	} catch (e) {
+		return Promise.reject({
+			status: "error",
+			code: 500,
+			message: "Error finding Batch_id",
+		});
+	}
 }
 
 async function getUserApplication(user_id) {
-    const queryObj = {
-        text: queries.applicantDashboard,
-        values: [user_id],
-    };
-    try {
-        const { rows, rowCount } = await db.query(queryObj);
-        const result = rows[0];
-        const data = {
-            result
-        }
-        if (rowCount == 0) {
-            return Promise.reject({
-                status: "erorr",
-                code: 404,
-                message: "User Application Not found. Please check back",
-            });
-        }
-        if (rowCount > 0) {
-            return Promise.resolve({
-                status: "success",
-                code: 200,
-                message: "User Application Found",
-                Application_date: data.result.created_at,
-                Application_status: data.result.application_status
-            });
-        }
-    } catch (e) {
-        console.log(e)
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error finding application",
-        });
-    }
+	const queryObj = {
+		text: queries.applicantDashboard,
+		values: [user_id],
+	};
+	try {
+		const { rows, rowCount } = await db.query(queryObj);
+		const result = rows[0];
+		const data = {
+			result,
+		};
+		if (rowCount == 0) {
+			return Promise.reject({
+				status: "erorr",
+				code: 404,
+				message:
+					"User Application Not found. Please check back",
+			});
+		}
+		if (rowCount > 0) {
+			return Promise.resolve({
+				status: "success",
+				code: 200,
+				message: "User Application Found",
+				Application_date:
+					data.result.created_at,
+				Application_status:
+					data.result
+						.application_status,
+			});
+		}
+	} catch (e) {
+		console.log(e);
+		return Promise.reject({
+			status: "error",
+			code: 500,
+			message: "Error finding application",
+		});
+	}
 }
 
 async function getUserDetails(id) {
-    const queryObj = {
-        text: queries.getuserName,
-        values: [id],
-    };
-    try {
-        const { rows,rowCount } = await db.query(queryObj);
-        const result = rows[0];
-        if (rowCount== 0) {
-            return Promise.reject({
-                status: "erorr",
-                code: 404,
-                message: "User  Not found",
-            });
-        }
-        if (rowCount>0) {
-            return Promise.resolve({
-                status: "success",
-                code: 200,
-                message: "User found",
-                email:result.email_address,
-                first_name:result.first_name,
-                last_name:result.last_name
-            });
-        }
-    } catch (e) {
-        console.log(e)
-        return Promise.reject({
-            status: "error",
-            code: 500,
-            message: "Error user deatils",
-        });
-    }
+	const queryObj = {
+		text: queries.getuserName,
+		values: [id],
+	};
+	try {
+		const { rows, rowCount } = await db.query(queryObj);
+		const result = rows[0];
+		if (rowCount == 0) {
+			return Promise.reject({
+				status: "erorr",
+				code: 404,
+				message: "User  Not found",
+			});
+		}
+		if (rowCount > 0) {
+			return Promise.resolve({
+				status: "success",
+				code: 200,
+				message: "User found",
+				email: result.email_address,
+				first_name: result.first_name,
+				last_name: result.last_name,
+			});
+		}
+	} catch (e) {
+		console.log(e);
+		return Promise.reject({
+			status: "error",
+			code: 500,
+			message: "Error user deatils",
+		});
+	}
 }
-
-
 
 module.exports = {
-    createNewUser,
-    checkIfUserDoesNotExistBefore,
-    sendRestLink,
-    changeUserPassword,
-    checkEmailAndPasswordMatch,
-    applicationForm,
-    checkBatch,
-    getUserApplication,
-    getUserDetails
-}
+	createNewUser,
+	checkIfUserDoesNotExistBefore,
+	sendRestLink,
+	changeUserPassword,
+	checkEmailAndPasswordMatch,
+	applicationForm,
+	checkBatch,
+	getUserApplication,
+	getUserDetails,
+};

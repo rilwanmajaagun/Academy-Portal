@@ -1,5 +1,5 @@
 const queries = {
-  applicantSignUp: `
+	applicantSignUp: `
    INSERT INTO academy_user(
     first_name,
     last_name,
@@ -11,15 +11,15 @@ const queries = {
     is_admin
     ) VALUES($1, $2, $3, $4, $5, $6, $7,$8) RETURNING * 
   `,
-  forgetPassword: `
+	forgetPassword: `
   UPDATE academy_user SET email_address=($1), password=($2) WHERE id=($3) RETURNING *
   `,
 
-  findUserByEmail: `
+	findUserByEmail: `
     SELECT * FROM academy_user WHERE email_address=($1)
   `,
-  
-  applicantForm: `
+
+	applicantForm: `
     INSERT INTO application_form(
       user_id,
       cv_url,
@@ -40,44 +40,43 @@ const queries = {
     ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *
   `,
 
-  getEmail:`
+	getEmail: `
   SELECT email_address FROM academy_user WHERE id=($1)
   `,
-  
-  getuserName:`
+
+	getuserName: `
   SELECT * FROM academy_user WHERE id=($1)
   `,
 
-  applicantDashboard: `
+	applicantDashboard: `
     SELECT * FROM application_form WHERE user_id=($1) ORDER BY "batch_id" DESC
   `,
 
-  getSpecificBatch: `
+	getSpecificBatch: `
     SELECT * FROM application_form WHERE batch_id=($1)
   `,
 
-  getAllapplicantResultDESC: `
+	getAllapplicantResultDESC: `
   SELECT * FROM application_form ORDER BY "age" DESC, "cgpa" DESC
   `,
 
-  getAllapplicantResultASC: `
+	getAllapplicantResultASC: `
   SELECT * FROM application_form ORDER BY "age" ASC, "cgpa" ASC
 `,
 
-  updateStatus:
-  `
+	updateStatus: `
   UPDATE application_form SET application_status=($1) WHERE id=($2) RETURNING *
   `,
 
-  applcantDashboard: `
+	applcantDashboard: `
     SELECT * FROM assessment WHERE user_id=($1)
   `,
 
-  getBatch: `
+	getBatch: `
   SELECT * FROM application_form WHERE user_id=($1) AND batch_id=($2)
   `,
-  
-  createApplication: `
+
+	createApplication: `
   INSERT INTO application_table(
     file_url,
     link,
@@ -89,11 +88,11 @@ const queries = {
     ) VALUES($1, $2, $3,$4, $5, $6, $7) RETURNING *
   `,
 
-  checkIfBatchExists: `
+	checkIfBatchExists: `
     SELECT * FROM application_table WHERE batch_id=($1)
   `,
 
-  getTotalApplication:`
+	getTotalApplication: `
   SELECT COUNT(*) 
   FROM application_form
   WHERE batch_id=($1)
@@ -102,7 +101,7 @@ const queries = {
   FROM application_form
   `,
 
-  academyHistory:`
+	academyHistory: `
   INSERT INTO academy(
     batch_id,
     students,
@@ -112,31 +111,31 @@ const queries = {
   ) VALUES ($1, $2, $3, $4, $5)
   `,
 
-  getAllAcademyRecord:`
+	getAllAcademyRecord: `
     SELECT * FROM academy ORDER BY "batch_id" ASC
   `,
 
-  getAcademyTotal:`
+	getAcademyTotal: `
   SELECT COUNT(*) 
   FROM academy
   `,
 
-  checkAcademyBatch:`
+	checkAcademyBatch: `
   SELECT * FROM academy WHERE batch_id = ($1)
   `,
 
-  currentBatch:`
+	currentBatch: `
   SELECT batch_id FROM application_form ORDER BY batch_id DESC
   `,
-  allBatch:`
+	allBatch: `
   SELECT batch_id FROM application_table ORDER BY batch_id ASC
   `,
 
-  getToken:`
+	getToken: `
   SELECT * FROM blacklist WHERE token = ($1)
   `,
 
-  addAssessment: `
+	addAssessment: `
   INSERT INTO  question(
     file_url,
     question,
@@ -149,11 +148,11 @@ const queries = {
   ) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *
 `,
 
-getCorrectAnswer:`
+	getCorrectAnswer: `
 SELECT option_answer FROM question WHERE batch_id=($1) ORDER BY id
 `,
 
-selectQuestion: `
+	selectQuestion: `
 SELECT file_url, question,
 option_a,
 option_b,
@@ -162,14 +161,14 @@ option_d,
 option_answer FROM question WHERE batch_id=($1)
 `,
 
- updateQuestion:`
+	updateQuestion: `
  UPDATE question SET  
  file_url=($1),
  question= ($2), option_a= ($3), option_b= ($4), option_c= ($5), option_d= ($6), option_answer= ($7) 
  WHERE batch_id = ($8) AND id = ($9) RETURNING *
  `,
 
-userAnswer: `
+	userAnswer: `
 INSERT INTO userAn(
   question_id,
   user_id,
@@ -178,35 +177,34 @@ INSERT INTO userAn(
 ) VALUES($1, $2, $3, $4) RETURNING *
 `,
 
-getUserAnswer:`
+	getUserAnswer: `
 SELECT user_answer FROM userAn WHERE user_id=($1) AND batch_id=($2) ORDER BY question_id 
 `,
 
-updateScore:
-`
+	updateScore: `
 UPDATE application_form SET score=($1) WHERE user_id=($2) AND batch_id=($3) RETURNING *
 `,
 
-questionBatch:`
+	questionBatch: `
 SELECT batch_id FROM application_table ORDER BY batch_id DESC
 `,
 
-checkIfUserSubmit:`
+	checkIfUserSubmit: `
 SELECT * FROM userAn WHERE user_id=($1) AND batch_id=($2)
 `,
 
-getQuestion:`
+	getQuestion: `
 SELECT * FROM question WHERE batch_id=($1)
 `,
 
-getQuestionBatch:`
+	getQuestionBatch: `
 SELECT batch_id FROM application_form WHERE user_id =($1) ORDER BY batch_id DESC
 `,
 
-getUpdate:`
+	getUpdate: `
 SELECT * FROM application_table ORDER BY batch_id DESC
 `,
-assessmentStatus:`
+	assessmentStatus: `
 INSERT INTO assessment_details(
   batch_id,
   date_compose,
@@ -215,23 +213,21 @@ INSERT INTO assessment_details(
   status
 )VALUES($1, $2, $3, $4, $5) RETURNING *
 `,
-checkIfBatchExistsInAssessmentStatus:`
+	checkIfBatchExistsInAssessmentStatus: `
 SELECT * FROM assessment_details WHERE batch_id=($1)
 `,
-assessHistory:`
+	assessHistory: `
 SELECT * FROM assessment_details ORDER BY batch_id ASC
 `,
-updateAssessmenTStatus:`
+	updateAssessmenTStatus: `
 UPDATE assessment_details SET status=($1) WHERE batch_id=($2)
 `,
-updateAssessmenTime:`
+	updateAssessmenTime: `
 UPDATE assessment_details SET time_allocated=($1) WHERE batch_id=($2)
 `,
-getAssessmentTime:`
+	getAssessmentTime: `
 SELECT time_allocated FROM assessment_details WHERE batch_id=($1)
 `,
 };
 
-
 module.exports = queries;
-
