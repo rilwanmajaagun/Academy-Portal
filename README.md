@@ -1,2 +1,1 @@
 # Academy-Portal 
-"hello ore"
